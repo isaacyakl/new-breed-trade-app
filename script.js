@@ -1,8 +1,10 @@
 $(document).ready(function() {
-	var itemsWrapper = document.querySelector("#itemsWrapper");
 	const maxTradeItems = 15;
 	const minTradeItems = 1;
 	const maxPicturesPerItem = 7;
+	const maxPicturesCombinedFileSizePerItem = 18; // in MBs
+	const errorMsgTimeout = 4000;
+	var itemsWrapper = document.querySelector("#itemsWrapper");
 	var addItemBtn = document.querySelector("#addItem");
 	var removeItemBtn = document.querySelector("#removeItem");
 
@@ -178,16 +180,6 @@ $(document).ready(function() {
 		var picturesInput = document.createElement("input");
 		picturesInput.setAttribute("type", "file");
 		picturesInput.setAttribute("accept", "image/*");
-		picturesInput.addEventListener("input", () => {
-			var selectedFiles = picturesInput.files;
-			// If pictures are selected
-			if (selectedFiles.length != 0) {
-				// If more than max allowed pictures are selected
-				if (selectedFiles.length > maxPicturesPerItem) {
-					picturesInput.value = ""; // Clear the selection
-				}
-			}
-		});
 		picturesInput.classList.add("form-control-file");
 		picturesInput.setAttribute("id", "pictures" + newItemNum);
 		picturesInput.setAttribute("name", "pictures" + newItemNum);
@@ -198,7 +190,46 @@ $(document).ready(function() {
 		picturesHelp.setAttribute("id", "picturesHelp" + newItemNum);
 		picturesHelp.classList.add("form-text");
 		picturesHelp.classList.add("text-muted");
-		picturesHelp.innerHTML = "Select a MAXIMUM of " + maxPicturesPerItem + " pictures.";
+		picturesHelp.innerHTML = `MAX: ${maxPicturesPerItem} pictures totaling ${maxPicturesCombinedFileSizePerItem} MBs.`;
+		picturesInput.addEventListener("input", () => {
+			var selectedFiles = picturesInput.files;
+			var selectedFilesTotalSize = 0;
+
+			// Calculate combined file upload size
+			Array.from(selectedFiles).forEach(f => {
+				selectedFilesTotalSize += f.size;
+			});
+
+			// If pictures are selected
+			if (selectedFiles.length != 0) {
+				// If more than max allowed pictures are selected
+				if (selectedFiles.length > maxPicturesPerItem) {
+					// Let the user know
+					picturesHelp.classList.add("text-danger");
+					picturesHelp.innerHTML = "Too many pictures selected!";
+					picturesHelp.classList.remove("text-muted");
+					setTimeout(() => {
+						picturesHelp.classList.add("text-muted");
+						picturesHelp.innerHTML = `MAX: ${maxPicturesPerItem} pictures totaling ${maxPicturesCombinedFileSizePerItem} MBs.`;
+						picturesHelp.classList.remove("text-danger");
+					}, errorMsgTimeout);
+					picturesInput.value = ""; // Clear the selection
+				}
+				// If total size of all files exceeds max allowed
+				else if (selectedFilesTotalSize > maxPicturesCombinedFileSizePerItem * 1024 * 1024) {
+					// Let the user know
+					picturesHelp.classList.add("text-danger");
+					picturesHelp.innerHTML = "Total file size exceeded!";
+					picturesHelp.classList.remove("text-muted");
+					setTimeout(() => {
+						picturesHelp.classList.add("text-muted");
+						picturesHelp.innerHTML = `MAX: ${maxPicturesPerItem} pictures totaling ${maxPicturesCombinedFileSizePerItem} MBs.`;
+						picturesHelp.classList.remove("text-danger");
+					}, errorMsgTimeout);
+					picturesInput.value = ""; // Clear the selection
+				}
+			}
+		});
 		picturesGrp.appendChild(picturesLbl);
 		picturesGrp.appendChild(picturesInput);
 		picturesGrp.appendChild(picturesHelp);
@@ -270,7 +301,7 @@ $(document).ready(function() {
 				document.querySelector("#tradeSubmit").classList.remove("btn-danger");
 				document.querySelector("#tradeSubmit").classList.add("btn-success");
 				document.querySelector("#tradeSubmit").innerHTML = "Submit";
-			}, 3500);
+			}, errorMsgTimeout);
 			return;
 		}
 

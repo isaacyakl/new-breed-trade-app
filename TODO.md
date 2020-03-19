@@ -1,6 +1,5 @@
 # TO-DO
 
--  Add file upload size and type limitations
 -  Add backend
 -  Add git hooks
 -  Add IE support
