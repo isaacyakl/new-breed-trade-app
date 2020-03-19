@@ -52,7 +52,8 @@ $(document).ready(function() {
 		makeModelGrp.classList.add("form-group");
 		var makeModelLbl = document.createElement("label");
 		makeModelLbl.setAttribute("for", "makeModel" + newItemNum);
-		makeModelLbl.innerHTML = 'Make, Model, and Color <span class="text-danger">*</span>';
+		makeModelLbl.innerHTML =
+			'Make, Model, and Color <span class="text-danger" role="none">*</span>';
 		var makeModelInput = document.createElement("input");
 		makeModelInput.setAttribute("type", "text");
 		makeModelInput.classList.add("form-control");
@@ -77,7 +78,7 @@ $(document).ready(function() {
 		qtyGrp.classList.add("form-group");
 		var qtyLbl = document.createElement("label");
 		qtyLbl.setAttribute("for", "qty");
-		qtyLbl.innerHTML = 'Quantity <span class="text-danger">*</span>';
+		qtyLbl.innerHTML = 'Quantity <span class="text-danger" role="none">*</span>';
 		var qtyInput = document.createElement("input");
 		qtyInput.setAttribute("type", "number");
 		qtyInput.classList.add("form-control");
@@ -102,7 +103,7 @@ $(document).ready(function() {
 		conditionGrp.classList.add("form-group");
 		var conditionLbl = document.createElement("label");
 		conditionLbl.setAttribute("for", "condition");
-		conditionLbl.innerHTML = 'Condition <span class="text-danger">*</span>';
+		conditionLbl.innerHTML = 'Condition <span class="text-danger" role="none">*</span>';
 		var conditionInput = document.createElement("input");
 		conditionInput.setAttribute("type", "text");
 		conditionInput.classList.add("form-control");
@@ -172,7 +173,7 @@ $(document).ready(function() {
 		picturesGrp.classList.add("form-group");
 		var picturesLbl = document.createElement("label");
 		picturesLbl.setAttribute("for", "pictures");
-		picturesLbl.innerHTML = 'Pictures <span class="text-danger">*</span>';
+		picturesLbl.innerHTML = 'Pictures <span class="text-danger" role="none">*</span>';
 		var picturesInput = document.createElement("input");
 		picturesInput.setAttribute("type", "file");
 		picturesInput.classList.add("form-control-file");
