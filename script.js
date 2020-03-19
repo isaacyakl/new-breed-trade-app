@@ -2,6 +2,7 @@ $(document).ready(function() {
 	var itemsWrapper = document.querySelector("#itemsWrapper");
 	const maxTradeItems = 15;
 	const minTradeItems = 1;
+	const maxPicturesPerItem = 7;
 	var addItemBtn = document.querySelector("#addItem");
 	var removeItemBtn = document.querySelector("#removeItem");
 
@@ -176,6 +177,17 @@ $(document).ready(function() {
 		picturesLbl.innerHTML = 'Pictures <span class="text-danger" role="none">*</span>';
 		var picturesInput = document.createElement("input");
 		picturesInput.setAttribute("type", "file");
+		picturesInput.setAttribute("accept", "image/*");
+		picturesInput.addEventListener("input", () => {
+			var selectedFiles = picturesInput.files;
+			// If pictures are selected
+			if (selectedFiles.length != 0) {
+				// If more than max allowed pictures are selected
+				if (selectedFiles.length > maxPicturesPerItem) {
+					picturesInput.value = ""; // Clear the selection
+				}
+			}
+		});
 		picturesInput.classList.add("form-control-file");
 		picturesInput.setAttribute("id", "pictures" + newItemNum);
 		picturesInput.setAttribute("name", "pictures" + newItemNum);
@@ -186,8 +198,7 @@ $(document).ready(function() {
 		picturesHelp.setAttribute("id", "picturesHelp" + newItemNum);
 		picturesHelp.classList.add("form-text");
 		picturesHelp.classList.add("text-muted");
-		picturesHelp.innerHTML =
-			"Guns/markers MUST include pictures of the: ASA Threads, Breach, Top Down, Left Side, Right Side, and Barrel";
+		picturesHelp.innerHTML = "Select a MAXIMUM of " + maxPicturesPerItem + " pictures.";
 		picturesGrp.appendChild(picturesLbl);
 		picturesGrp.appendChild(picturesInput);
 		picturesGrp.appendChild(picturesHelp);
