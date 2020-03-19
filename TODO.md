@@ -1,4 +1,5 @@
 # TO-DO
++ Add hidden trade item number input updated when items are added/removed
 + Add backend
 + Add git hooks
 + Add IE support
