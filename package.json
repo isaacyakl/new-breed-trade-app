@@ -1,0 +1,20 @@
+{
+	"name": "nbpa-trade-form",
+	"version": "0.1.0",
+	"description": "New Breed Paintball & Airsoft Trade Form",
+	"private": true,
+	"browser": "script.min.js",
+	"scripts": {
+		"test": "echo 'Compressing...' && terser script.js -c -m --comments -o scripts.min.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+ssh://git@github.com/isaacyakl/nbpa-trade-form.git"
+	},
+	"author": "Isaac 'yak' L. <i@isaacyakl.com> (https://www.isaacyakl.com/)",
+	"license": "UNLICENSED",
+	"bugs": {
+		"url": "https://github.com/isaacyakl/nbpa-trade-form/issues"
+	},
+	"homepage": "https://github.com/isaacyakl/nbpa-trade-form#readme"
+}
