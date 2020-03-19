@@ -229,15 +229,19 @@ $(document).ready(function() {
 
 	// When the remove item button is clicked
 	removeItemBtn.addEventListener("click", () => {
-		// Create remove item button if it is not the only item
+		// If there is more than the minimum number of items
 		if (itemsWrapper.childElementCount > minTradeItems) {
-			itemsWrapper.removeChild(itemsWrapper.lastChild);
+			itemsWrapper.removeChild(itemsWrapper.lastChild); // Remove last item
+
+			// If after removing the last item the number of items is the minimum
 			if (itemsWrapper.childElementCount == minTradeItems) {
-				removeItemBtn.disabled = true;
+				removeItemBtn.disabled = true; // Disable remove item button
 			}
 		}
+
+		// If not the max number of items
 		if (itemsWrapper.childElementCount < maxTradeItems) {
-			addItemBtn.disabled = false;
+			addItemBtn.disabled = false; // Enable add item button
 		}
 	});
 
@@ -258,5 +262,13 @@ $(document).ready(function() {
 			}, 3500);
 			return;
 		}
+
+		// Create hidden input for passing number of trade items
+		var numTradeItems = document.createElement("input");
+		numTradeItems.setAttribute("type", "hidden");
+		numTradeItems.setAttribute("id", "numTradeItems");
+		numTradeItems.setAttribute("name", "numTradeItems");
+		numTradeItems.value = itemsWrapper.childElementCount;
+		itemsWrapper.appendChild(numTradeItems);
 	});
 });
