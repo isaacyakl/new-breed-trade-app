@@ -41,6 +41,10 @@ input:focus:invalid {
 	box-shadow: none;
 }
 
+#tradeForm {
+	display: none; /* Hide the form initially. If Javascript is enabled it will be shown. */
+}
+
 .tradeItem {
 	margin: 3px;
 	padding: 15px 0px 15px 0px;

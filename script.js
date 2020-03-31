@@ -1,4 +1,7 @@
 $(document).ready(function() {
+	// Enable form
+	document.querySelector("#tradeForm").style.display = "initial";
+
 	const maxTradeItems = 15;
 	const minTradeItems = 1;
 	const maxPicturesPerItem = 7;
