@@ -5,7 +5,7 @@
 	"private": true,
 	"browser": "script.min.js",
 	"scripts": {
-		"compress": "echo 'Compressing...' && terser script.js -c -m --comments -o scripts.min.js"
+		"compress": "echo 'Compressing...' && terser script.js -c -m --comments -o script.min.js"
 	},
 	"repository": {
 		"type": "git",

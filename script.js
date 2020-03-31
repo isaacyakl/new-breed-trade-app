@@ -2,14 +2,14 @@ $(document).ready(function() {
 	// Enable form
 	document.querySelector("#tradeForm").style.display = "initial";
 
-	const maxTradeItems = 15;
-	const minTradeItems = 1;
-	const maxPicturesPerItem = 7;
-	const maxPicturesCombinedFileSizePerItem = 18; // in MBs
-	const errorMsgTimeout = 4000;
-	var itemsWrapper = document.querySelector("#itemsWrapper");
-	var addItemBtn = document.querySelector("#addItem");
-	var removeItemBtn = document.querySelector("#removeItem");
+	var maxTradeItems = 15; // Maximum trade items allowed
+	var minTradeItems = 1; // Minimum trade items allowed
+	var maxPicturesPerItem = 7; // Maximum pictures allowed per item
+	var maxPicturesCombinedFileSizePerItem = 18; // in MBs, maximum combined upload size of all pictures
+	var errorMsgTimeout = 4000; // in ms, length of time for form error messages to appears
+	var itemsWrapper = document.querySelector("#itemsWrapper"); // Grab itemWrapper
+	var addItemBtn = document.querySelector("#addItem"); // Grab item add button
+	var removeItemBtn = document.querySelector("#removeItem"); // Grab item remove button
 
 	// When the add item button is clicked
 	addItemBtn.addEventListener("click", () => {
@@ -178,14 +178,14 @@ $(document).ready(function() {
 		var picturesGrp = document.createElement("div");
 		picturesGrp.classList.add("form-group");
 		var picturesLbl = document.createElement("label");
-		picturesLbl.setAttribute("for", "pictures" + newItemNum);
+		picturesLbl.setAttribute("for", "pictures" + newItemNum + "[]");
 		picturesLbl.innerHTML = 'Pictures <span class="text-danger" role="none">*</span>';
 		var picturesInput = document.createElement("input");
 		picturesInput.setAttribute("type", "file");
 		picturesInput.setAttribute("accept", "image/*");
 		picturesInput.classList.add("form-control-file");
 		picturesInput.setAttribute("id", "pictures" + newItemNum);
-		picturesInput.setAttribute("name", "pictures" + newItemNum);
+		picturesInput.setAttribute("name", "pictures" + newItemNum + "[]"); // Square brackets need for multiple file upload handling on backend
 		picturesInput.setAttribute("aria-describedby", "picturesHelp");
 		picturesInput.required = true;
 		picturesInput.multiple = true;
