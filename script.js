@@ -1,12 +1,15 @@
+// Trade form settings
+var maxTradeItems = 15; // Maximum trade items allowed
+var minTradeItems = 1; // Minimum trade items allowed
+var maxPictureSizeMB = 1; // in MB, maximum file size per picture
+var maxPictureWidthPX = 1440; // in pixels, maximum picture width
+var maxPicturesPerItem = 10; // Maximum pictures allowed per item
+var errorMsgTimeout = 4000; // in ms, length of time for form error messages to appears
+
 $(document).ready(function() {
 	// Enable form
 	document.querySelector("#tradeForm").style.display = "initial";
 
-	var maxTradeItems = 15; // Maximum trade items allowed
-	var minTradeItems = 1; // Minimum trade items allowed
-	var maxPicturesPerItem = 7; // Maximum pictures allowed per item
-	var maxPicturesCombinedFileSizePerItem = 18; // in MBs, maximum combined upload size of all pictures
-	var errorMsgTimeout = 4000; // in ms, length of time for form error messages to appears
 	var itemsWrapper = document.querySelector("#itemsWrapper"); // Grab itemWrapper
 	var addItemBtn = document.querySelector("#addItem"); // Grab item add button
 	var removeItemBtn = document.querySelector("#removeItem"); // Grab item remove button
@@ -182,7 +185,7 @@ $(document).ready(function() {
 		picturesLbl.innerHTML = 'Pictures <span class="text-danger" role="none">*</span>';
 		var picturesInput = document.createElement("input");
 		picturesInput.setAttribute("type", "file");
-		picturesInput.setAttribute("accept", "image/*");
+		picturesInput.setAttribute("accept", "image/png, image/jpeg");
 		picturesInput.classList.add("form-control-file");
 		picturesInput.setAttribute("id", "pictures" + newItemNum);
 		picturesInput.setAttribute("name", "pictures" + newItemNum + "[]"); // Square brackets need for multiple file upload handling on backend
@@ -193,7 +196,8 @@ $(document).ready(function() {
 		picturesHelp.setAttribute("id", "picturesHelp" + newItemNum);
 		picturesHelp.classList.add("form-text");
 		picturesHelp.classList.add("text-muted");
-		picturesHelp.innerHTML = `MAX: ${maxPicturesPerItem} pictures totaling ${maxPicturesCombinedFileSizePerItem} MBs.`;
+		picturesHelp.innerHTML = `MAX: ${maxPicturesPerItem} pictures totaling ${maxPictureSizeMB *
+			maxPicturesPerItem} MBs.`;
 		picturesInput.addEventListener("input", () => {
 			var selectedFiles = picturesInput.files;
 			var selectedFilesTotalSize = 0;
@@ -213,20 +217,22 @@ $(document).ready(function() {
 					picturesHelp.classList.remove("text-muted");
 					setTimeout(() => {
 						picturesHelp.classList.add("text-muted");
-						picturesHelp.innerHTML = `MAX: ${maxPicturesPerItem} pictures totaling ${maxPicturesCombinedFileSizePerItem} MBs.`;
+						picturesHelp.innerHTML = `MAX: ${maxPicturesPerItem} pictures totaling ${maxPictureSizeMB *
+							maxPicturesPerItem} MBs.`;
 						picturesHelp.classList.remove("text-danger");
 					}, errorMsgTimeout);
 					picturesInput.value = ""; // Clear the selection
 				}
 				// If total size of all files exceeds max allowed
-				else if (selectedFilesTotalSize > maxPicturesCombinedFileSizePerItem * 1024 * 1024) {
+				else if (selectedFilesTotalSize > maxPictureSizeMB * maxPicturesPerItem * 1024 * 1024) {
 					// Let the user know
 					picturesHelp.classList.add("text-danger");
 					picturesHelp.innerHTML = "Total file size exceeded!";
 					picturesHelp.classList.remove("text-muted");
 					setTimeout(() => {
 						picturesHelp.classList.add("text-muted");
-						picturesHelp.innerHTML = `MAX: ${maxPicturesPerItem} pictures totaling ${maxPicturesCombinedFileSizePerItem} MBs.`;
+						picturesHelp.innerHTML = `MAX: ${maxPicturesPerItem} pictures totaling ${maxPictureSizeMB *
+							maxPicturesPerItem} MBs.`;
 						picturesHelp.classList.remove("text-danger");
 					}, errorMsgTimeout);
 					picturesInput.value = ""; // Clear the selection
