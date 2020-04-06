@@ -289,9 +289,6 @@ formReady(() => {
 	// Function for sending trade
 	// Use after calling validateTrade())
 	function sendTrade() {
-		// Clear the submit button help element
-		submitHelpElement.innerHTML = "";
-
 		// Add number of trade items
 		tradeFormData.append("numTradeItems", document.querySelectorAll(".tradeItem").length);
 
@@ -317,8 +314,16 @@ formReady(() => {
 
 		// Setup a new request
 		let request = new XMLHttpRequest();
-		request.open("POST", "trade.php");
-		request.send(tradeFormData);
+
+		// While the trade is sending
+		request.upload.onprogress = (e) => {
+			triggerMsg(
+				submitHelpElement,
+				`Uploading (${((e.loaded / e.total) * 100).toFixed(0)}%)`,
+				"pending",
+				0
+			);
+		};
 
 		// When the trade successfully submits
 		request.onload = () => {
@@ -384,6 +389,10 @@ formReady(() => {
 				document.getElementById("tradeOptionsSection").style.display = "initial";
 			}, msgTimeout);
 		};
+
+		// Send trade
+		request.open("POST", "trade.php");
+		request.send(tradeFormData);
 	}
 
 	// Function for updating input labels
@@ -406,12 +415,18 @@ formReady(() => {
 		// Style based on msg type
 		if (type == "warning") {
 			element.classList.remove("text-muted");
+			element.classList.remove("text-primary");
+			element.classList.remove("text-success");
 			element.classList.add("text-danger");
 		} else if (type == "pending") {
 			element.classList.remove("text-muted");
+			element.classList.remove("text-danger");
+			element.classList.remove("text-success");
 			element.classList.add("text-primary");
 		} else if (type == "success") {
 			element.classList.remove("text-muted");
+			element.classList.remove("text-danger");
+			element.classList.remove("text-primary");
 			element.classList.add("text-success");
 		}
 
@@ -430,17 +445,11 @@ formReady(() => {
 		if (timeout != 0) {
 			// Wait for requested time
 			setTimeout(() => {
-				// Style reversion based on msg type
-				if (type == "warning") {
-					element.classList.remove("text-danger");
-					element.classList.add("text-muted");
-				} else if (type == "pending") {
-					element.classList.remove("text-primary");
-					element.classList.add("text-muted");
-				} else if (type == "success") {
-					element.classList.remove("text-success");
-					element.classList.add("text-muted");
-				}
+				// Style reversion
+				element.classList.add("text-muted");
+				element.classList.remove("text-danger");
+				element.classList.remove("text-primary");
+				element.classList.remove("text-success");
 
 				// Revert to original message
 				element.innerHTML = originalMsg;
@@ -553,17 +562,17 @@ formReady(() => {
 			"success",
 			0
 		);
-		console.log(
-			`Compression finished and saved ${(
-				(totalSizeOfSelectedPictures - totalSizeOfCompressedPictures) /
-				1024 /
-				1024
-			).toFixed(2)} MBs. New total file upload size: ${(
-				totalSizeOfCompressedPictures /
-				1024 /
-				1024
-			).toFixed(2)} MBs.`
-		);
+		// console.log(
+		// 	`Compression finished and saved ${(
+		// 		(totalSizeOfSelectedPictures - totalSizeOfCompressedPictures) /
+		// 		1024 /
+		// 		1024
+		// 	).toFixed(2)} MBs. New total file upload size: ${(
+		// 		totalSizeOfCompressedPictures /
+		// 		1024 /
+		// 		1024
+		// 	).toFixed(2)} MBs.`
+		// );
 
 		// Make sure the total compressed files' size is less than 25 MBs (max allowable size of email attachments)
 		if ((totalSizeOfCompressedPictures / 1024 / 1024).toFixed(2) > 25) {
