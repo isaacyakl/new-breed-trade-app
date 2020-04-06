@@ -1,6 +1,5 @@
 # TO-DO
 
--  Add client-side image compression
 -  Add backend
 -  Add uploading splash animation after form submit
 -  Comment style.css
