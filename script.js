@@ -414,20 +414,20 @@ formReady(() => {
 
 		// Style based on msg type
 		if (type == "warning") {
-			element.classList.remove("text-muted");
-			element.classList.remove("text-primary");
-			element.classList.remove("text-success");
 			element.classList.add("text-danger");
+			element.classList.remove("text-muted");
+			element.classList.remove("text-primary");
+			element.classList.remove("text-success");
 		} else if (type == "pending") {
+			element.classList.add("text-primary");
 			element.classList.remove("text-muted");
 			element.classList.remove("text-danger");
 			element.classList.remove("text-success");
-			element.classList.add("text-primary");
 		} else if (type == "success") {
+			element.classList.add("text-success");
 			element.classList.remove("text-muted");
 			element.classList.remove("text-danger");
 			element.classList.remove("text-primary");
-			element.classList.add("text-success");
 		}
 
 		// Set msg
