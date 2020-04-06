@@ -13,7 +13,7 @@ formReady(() => {
 	const maxPicturesPerItem = 10; // Maximum pictures allowed per item
 	const maxPictureSizeMB = 1; // in MB, maximum file size per picture
 	const maxPictureWidthPX = 1440; // in pixels, maximum picture width
-	const msgTimeout = 4000; // in ms, length of time for form error messages to appears
+	const msgTimeout = 4500; // in ms, length of time for form error messages to appears
 
 	let tradeFormElement = document.getElementById("tradeForm"); // Create a variable for the trade form
 	let tradeFormData = new FormData(); // Create a FormData object for the trade form
@@ -289,11 +289,31 @@ formReady(() => {
 	// Function for sending trade
 	// Use after calling validateTrade())
 	function sendTrade() {
-		// Clear submission results in case previous submissions failed
-		submissionResultsElement.innerHTML = "";
+		// Clear the submit button help element
+		submitHelpElement.innerHTML = "";
 
 		// Add number of trade items
 		tradeFormData.append("numTradeItems", document.querySelectorAll(".tradeItem").length);
+
+		// Add inputs to form data
+		document.querySelectorAll("input").forEach((i) => {
+			// If the input is not one of the uncompressed files inputs
+			if (i.name.search("pictures") == -1) {
+				// Ad it to the form data
+				tradeFormData.append(i.name, i.value);
+			}
+		});
+		// Add textareas to form data
+		document.querySelectorAll("textarea").forEach((ta) => {
+			tradeFormData.append(ta.name, ta.value);
+		});
+		// Add selects to form data
+		document.querySelectorAll("select").forEach((s) => {
+			tradeFormData.append(s.name, s.value);
+		});
+
+		// Whether to receive debug info
+		tradeFormData.append("debug", "false");
 
 		// Setup a new request
 		let request = new XMLHttpRequest();
@@ -311,7 +331,33 @@ formReady(() => {
 			// Hide submit section
 			document.getElementById("submitSection").style.display = "none";
 
-			submissionResultsElement.innerHTML = request.response;
+			// Parse JSON response
+			let responseObj = JSON.parse(request.response);
+
+			// Show header and body of response
+			submissionResultsElement.innerHTML = responseObj.header + responseObj.body;
+
+			// If form input was invalid
+			if (responseObj.isFormInputValid === false) {
+				// Re-enable submit button
+				submitBtnElement.innerHTML = "Submit";
+				submitBtnElement.classList.add("btn-success");
+				submitBtnElement.classList.remove("btn-primary");
+				submitBtnElement.disabled = false;
+
+				// Redisplay the form sections after msgTimeout
+				setTimeout(() => {
+					// Re-display form sections
+					document.getElementById("introSection").style.display = "initial";
+					document.getElementById("personalInfoSection").style.display = "initial";
+					document.getElementById("itemsSection").style.display = "initial";
+					document.getElementById("tradeOptionsSection").style.display = "initial";
+					document.getElementById("submitSection").style.display = "initial";
+
+					// Clear submission results
+					submissionResultsElement.innerHTML = "";
+				}, msgTimeout);
+			}
 		};
 
 		// Only triggers if the request couldn't be made at all
