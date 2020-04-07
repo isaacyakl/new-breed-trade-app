@@ -11,11 +11,15 @@ $isFormInputValid = true;
 // Form result message variable
 $resultBody = "";
 
+// Debug info variable
+$debugInfo = "";
+
 // Function to display form results and exit script
 function displayResultPage() {
     // Import global variables
     global $isFormInputValid;
     global $resultBody;
+    global $debugInfo;
     global $email;
 
     // Result header
@@ -59,6 +63,7 @@ RTSBTN;
     $response->isFormInputValid = $isFormInputValid; // <bool> Whether the form was valid or not
     $response->header = $resultHeader; // <string> Header for the result
     $response->body = $resultBody; // <string> Body of the result
+    $response->debugInfo = $debugInfo; // <string> Debug information
 
     // Return json version of the $response object
     echo json_encode($response, JSON_HEX_QUOT | JSON_HEX_TAG);
@@ -230,27 +235,23 @@ if($isFormInputValid === false) {
 /* ***************************** */
 if($_POST['debug']=="true" || $_GET['debug']=="true")
 {
-    $resultBody .= "<pre>";
-
-    $resultBody .= print_r($fName,true);
-    $resultBody .= print_r($lName,true);
-    $resultBody .= print_r($email,true);
-    $resultBody .= print_r($phone,true);
-    $resultBody .= print_r($terms,true);
+    $debugInfo .= print_r($fName,true);
+    $debugInfo .= print_r($lName,true);
+    $debugInfo .= print_r($email,true);
+    $debugInfo .= print_r($phone,true);
+    $debugInfo .= print_r($terms,true);
     
-    $resultBody .= print_r($makeModel,true);
-    $resultBody .= print_r($qty,true);
-    $resultBody .= print_r($condition,true);
-    $resultBody .= print_r($upgradesMods,true);
-    $resultBody .= print_r($accessories,true);
-    $resultBody .= print_r($pictures,true);
-    $resultBody .= print_r($video,true);
+    $debugInfo .= print_r($makeModel,true);
+    $debugInfo .= print_r($qty,true);
+    $debugInfo .= print_r($condition,true);
+    $debugInfo .= print_r($upgradesMods,true);
+    $debugInfo .= print_r($accessories,true);
+    $debugInfo .= print_r($pictures,true);
+    $debugInfo .= print_r($video,true);
     
-    $resultBody .= print_r($sellOrTrade,true);
-    $resultBody .= print_r($tradeTowardsWhat,true);
-    $resultBody .= print_r($commentsNotes,true);
-
-    $resultBody .= "</pre>";
+    $debugInfo .= print_r($sellOrTrade,true);
+    $debugInfo .= print_r($tradeTowardsWhat,true);
+    $debugInfo .= print_r($commentsNotes,true);
 }
 
 

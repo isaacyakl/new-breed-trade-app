@@ -14,7 +14,7 @@ formReady(() => {
 	const maxPictureSizeMB = 1; // in MB, maximum file size per picture
 	const maxPictureWidthPX = 1440; // in pixels, maximum picture width
 	const msgTimeout = 4500; // in ms, length of time for form error messages to appears
-	const showDebugInfo = false; // boolean whether to include variable prints in the returned info
+	const showDebugInfo = true; // boolean, whether to include variable prints from the backend in the returned info
 
 	let tradeFormElement = document.getElementById("tradeForm"); // Create a variable for the trade form
 	let tradeFormData = new FormData(); // Create a FormData object for the trade form
@@ -372,6 +372,13 @@ formReady(() => {
 
 				// Show header and body of response
 				submissionResultsElement.innerHTML = responseObj.header + responseObj.body;
+
+				// If we are set to show debug info from backend
+				if (showDebugInfo === true) {
+					// Print backend debug info to the console
+					console.log("Server-Side Debug Info:");
+					console.log(responseObj.debugInfo);
+				}
 
 				// If form input was invalid
 				if (responseObj.isFormInputValid === false) {

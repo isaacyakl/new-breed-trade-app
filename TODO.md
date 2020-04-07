@@ -1,7 +1,6 @@
 # TO-DO
 
 -  Add backend
--  Add server debug to client console
 -  Add client console log to backend/email
 -  Comment style.css
 -  Add git hooks
