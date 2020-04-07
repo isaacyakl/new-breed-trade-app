@@ -310,7 +310,7 @@ formReady(() => {
 		});
 
 		// Whether to receive debug info
-		tradeFormData.append("debug", "false");
+		tradeFormData.append("debug", "true");
 
 		// Setup a new request
 		let request = new XMLHttpRequest();
@@ -342,16 +342,21 @@ formReady(() => {
 			// Show header and body of response
 			submissionResultsElement.innerHTML = responseObj.header + responseObj.body;
 
+			// If debugging enabled
+			if (tradeFormData.get("debug") == "true") {
+				console.log(responseObj.header + responseObj.body);
+			}
+
 			// If form input was invalid
 			if (responseObj.isFormInputValid === false) {
-				// Re-enable submit button
-				submitBtnElement.innerHTML = "Submit";
-				submitBtnElement.classList.add("btn-success");
-				submitBtnElement.classList.remove("btn-primary");
-				submitBtnElement.disabled = false;
-
-				// Redisplay the form sections after msgTimeout
+				// Redisplay the form sections after msgTimeout and re-enable submit button
 				setTimeout(() => {
+					// Re-enable submit button
+					submitBtnElement.innerHTML = "Submit";
+					submitBtnElement.classList.add("btn-success");
+					submitBtnElement.classList.remove("btn-primary");
+					submitBtnElement.disabled = false;
+
 					// Re-display form sections
 					document.getElementById("introSection").style.display = "initial";
 					document.getElementById("personalInfoSection").style.display = "initial";
@@ -374,14 +379,14 @@ formReady(() => {
 				msgTimeout
 			);
 
-			// Re-enable submit button
-			submitBtnElement.innerHTML = "Submit";
-			submitBtnElement.classList.add("btn-success");
-			submitBtnElement.classList.remove("btn-primary");
-			submitBtnElement.disabled = false;
-
-			// Redisplay the form sections after msgTimeout
+			// Redisplay the form sections after msgTimeout and re-enable submit button
 			setTimeout(() => {
+				// Re-enable submit button
+				submitBtnElement.innerHTML = "Submit";
+				submitBtnElement.classList.add("btn-success");
+				submitBtnElement.classList.remove("btn-primary");
+				submitBtnElement.disabled = false;
+
 				// Re-display form sections
 				document.getElementById("introSection").style.display = "initial";
 				document.getElementById("personalInfoSection").style.display = "initial";
@@ -640,14 +645,14 @@ formReady(() => {
 				}
 				// The trade was invalid
 				else {
-					// Re-enable submit button
-					submitBtnElement.innerHTML = "Submit";
-					submitBtnElement.classList.add("btn-success");
-					submitBtnElement.classList.remove("btn-primary");
-					submitBtnElement.disabled = false;
-
 					// Redisplay the form sections after msgTimeout
 					setTimeout(() => {
+						// Re-enable submit button
+						submitBtnElement.innerHTML = "Submit";
+						submitBtnElement.classList.add("btn-success");
+						submitBtnElement.classList.remove("btn-primary");
+						submitBtnElement.disabled = false;
+
 						// Re-display form sections
 						document.getElementById("introSection").style.display = "initial";
 						document.getElementById("personalInfoSection").style.display = "initial";
