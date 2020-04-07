@@ -14,6 +14,7 @@ formReady(() => {
 	const maxPictureSizeMB = 1; // in MB, maximum file size per picture
 	const maxPictureWidthPX = 1440; // in pixels, maximum picture width
 	const msgTimeout = 4500; // in ms, length of time for form error messages to appears
+	const showDebugInfo = false; // boolean whether to include variable prints in the returned info
 
 	let tradeFormElement = document.getElementById("tradeForm"); // Create a variable for the trade form
 	let tradeFormData = new FormData(); // Create a FormData object for the trade form
@@ -310,7 +311,11 @@ formReady(() => {
 		});
 
 		// Whether to receive debug info
-		tradeFormData.append("debug", "true");
+		if (showDebugInfo === true) {
+			tradeFormData.append("debug", "true");
+		} else {
+			tradeFormData.append("debug", "false");
+		}
 
 		// Setup a new request
 		let request = new XMLHttpRequest();
@@ -341,11 +346,6 @@ formReady(() => {
 
 			// Show header and body of response
 			submissionResultsElement.innerHTML = responseObj.header + responseObj.body;
-
-			// If debugging enabled
-			if (tradeFormData.get("debug") == "true") {
-				console.log(responseObj.header + responseObj.body);
-			}
 
 			// If form input was invalid
 			if (responseObj.isFormInputValid === false) {
