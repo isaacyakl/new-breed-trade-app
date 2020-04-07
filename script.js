@@ -269,6 +269,30 @@ formReady(() => {
 		}
 	}
 
+	// Function for enabling the form
+	function retryForm() {
+		setTimeout(() => {
+			// Re-enable submit button
+			submitBtnElement.innerHTML = "Submit";
+			submitBtnElement.classList.add("btn-success");
+			submitBtnElement.classList.remove("btn-primary");
+			submitBtnElement.disabled = false;
+
+			// Re-display form sections
+			document.getElementById("introSection").style.display = "initial";
+			document.getElementById("personalInfoSection").style.display = "initial";
+			document.getElementById("itemsSection").style.display = "initial";
+			document.getElementById("tradeOptionsSection").style.display = "initial";
+			document.getElementById("submitSection").style.display = "initial";
+
+			// Clear submission results
+			submissionResultsElement.innerHTML = "";
+
+			// Clear submit help element
+			submitHelpElement.innerHTML = "";
+		}, msgTimeout);
+	}
+
 	// Function for removing a trade item
 	function removeItem() {
 		// If there is more than the minimum number of items
@@ -332,41 +356,38 @@ formReady(() => {
 
 		// When the trade successfully submits
 		request.onload = () => {
-			// Update and hide submit button
-			submitBtnElement.disabled = true;
-			submitBtnElement.innerHTML = "Submitted!";
-			submitBtnElement.classList.add("btn-success");
-			submitBtnElement.classList.remove("btn-primary");
+			// Check HTTP response status was good
+			if (request.status == 200) {
+				// Update and hide submit button
+				submitBtnElement.disabled = true;
+				submitBtnElement.innerHTML = "Submitted!";
+				submitBtnElement.classList.add("btn-success");
+				submitBtnElement.classList.remove("btn-primary");
 
-			// Hide submit section
-			document.getElementById("submitSection").style.display = "none";
+				// Hide submit section
+				document.getElementById("submitSection").style.display = "none";
 
-			// Parse JSON response
-			let responseObj = JSON.parse(request.response);
+				// Parse JSON response
+				let responseObj = JSON.parse(request.response);
 
-			// Show header and body of response
-			submissionResultsElement.innerHTML = responseObj.header + responseObj.body;
+				// Show header and body of response
+				submissionResultsElement.innerHTML = responseObj.header + responseObj.body;
 
-			// If form input was invalid
-			if (responseObj.isFormInputValid === false) {
-				// Redisplay the form sections after msgTimeout and re-enable submit button
-				setTimeout(() => {
-					// Re-enable submit button
-					submitBtnElement.innerHTML = "Submit";
-					submitBtnElement.classList.add("btn-success");
-					submitBtnElement.classList.remove("btn-primary");
-					submitBtnElement.disabled = false;
+				// If form input was invalid
+				if (responseObj.isFormInputValid === false) {
+					// Let the user retry submitting the form
+					retryForm();
+				}
+			} else {
+				triggerMsg(
+					submitHelpElement,
+					"Failed to send trade. Please check your internet connection and try again.",
+					"warning",
+					msgTimeout
+				);
 
-					// Re-display form sections
-					document.getElementById("introSection").style.display = "initial";
-					document.getElementById("personalInfoSection").style.display = "initial";
-					document.getElementById("itemsSection").style.display = "initial";
-					document.getElementById("tradeOptionsSection").style.display = "initial";
-					document.getElementById("submitSection").style.display = "initial";
-
-					// Clear submission results
-					submissionResultsElement.innerHTML = "";
-				}, msgTimeout);
+				// Let the user retry submitting the form
+				retryForm();
 			}
 		};
 
@@ -379,20 +400,8 @@ formReady(() => {
 				msgTimeout
 			);
 
-			// Redisplay the form sections after msgTimeout and re-enable submit button
-			setTimeout(() => {
-				// Re-enable submit button
-				submitBtnElement.innerHTML = "Submit";
-				submitBtnElement.classList.add("btn-success");
-				submitBtnElement.classList.remove("btn-primary");
-				submitBtnElement.disabled = false;
-
-				// Re-display form sections
-				document.getElementById("introSection").style.display = "initial";
-				document.getElementById("personalInfoSection").style.display = "initial";
-				document.getElementById("itemsSection").style.display = "initial";
-				document.getElementById("tradeOptionsSection").style.display = "initial";
-			}, msgTimeout);
+			// Let the user retry submitting the form
+			retryForm();
 		};
 
 		// Send trade
@@ -645,20 +654,8 @@ formReady(() => {
 				}
 				// The trade was invalid
 				else {
-					// Redisplay the form sections after msgTimeout
-					setTimeout(() => {
-						// Re-enable submit button
-						submitBtnElement.innerHTML = "Submit";
-						submitBtnElement.classList.add("btn-success");
-						submitBtnElement.classList.remove("btn-primary");
-						submitBtnElement.disabled = false;
-
-						// Re-display form sections
-						document.getElementById("introSection").style.display = "initial";
-						document.getElementById("personalInfoSection").style.display = "initial";
-						document.getElementById("itemsSection").style.display = "initial";
-						document.getElementById("tradeOptionsSection").style.display = "initial";
-					}, msgTimeout);
+					// Let the user retry submitting the form
+					retryForm();
 				}
 			})
 			.catch((error) => {
@@ -669,7 +666,7 @@ formReady(() => {
 		e.preventDefault();
 	});
 
-	// Listen and capture invalid events within the trade form
+	// Listen and capture invalid input events within the trade form
 	tradeFormElement.addEventListener(
 		"invalid",
 		() => {
