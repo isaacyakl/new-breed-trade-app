@@ -14,7 +14,8 @@ formReady(() => {
 	const maxPictureSizeMB = 1; // in MB, maximum file size per picture
 	const maxPictureWidthPX = 1440; // in pixels, maximum picture width
 	const msgTimeout = 4500; // in ms, length of time for form error messages to appears
-	const showDebugInfo = true; // boolean, whether to include variable prints from the backend in the returned info
+	const showDebugInfo = true; // boolean, whether to include variable prints from the server-side and console log client-side
+	const startTime = new Date(); // The moment the user started filling out the form
 
 	let tradeFormElement = document.getElementById("tradeForm"); // Create a variable for the trade form
 	let tradeFormData = new FormData(); // Create a FormData object for the trade form
@@ -24,6 +25,8 @@ formReady(() => {
 	let submitBtnElement = document.getElementById("tradeSubmit"); // Create variable for submit button
 	let submitHelpElement = document.getElementById("submitHelp"); // Create a variable for the submit help element
 	let submissionResultsElement = document.getElementById("submissionResults"); // Create a variable for the submission results element
+
+	let msgLog = []; // Array of JSON objects for logging client-side messages during form filling and submission
 
 	// Function for adding a new trade item
 	function addItem() {
@@ -72,8 +75,7 @@ formReady(() => {
 		makeModelGrpElement.classList.add("form-group");
 		let makeModelLblElement = document.createElement("label");
 		makeModelLblElement.setAttribute("for", "makeModel" + newItemNum);
-		makeModelLblElement.innerHTML =
-			'Make, Model, and Color <span class="text-danger" role="none">*</span>';
+		makeModelLblElement.innerHTML = 'Make, Model, and Color <span class="text-danger" role="none">*</span>';
 		let makeModelInputElement = document.createElement("input");
 		makeModelInputElement.setAttribute("type", "text");
 		makeModelInputElement.classList.add("form-control");
@@ -137,8 +139,7 @@ formReady(() => {
 		conditionHelpElement.setAttribute("id", "conditionHelpElement" + newItemNum);
 		conditionHelpElement.classList.add("form-text");
 		conditionHelpElement.classList.add("text-muted");
-		conditionHelpElement.innerHTML =
-			'If used please write "Used" and describe the visual and operational condition of the item(s). If brand new write "Brand New".';
+		conditionHelpElement.innerHTML = 'If used please write "Used" and describe the visual and operational condition of the item(s). If brand new write "Brand New".';
 		conditionGrpElement.appendChild(conditionLblElement);
 		conditionGrpElement.appendChild(conditionInputElement);
 		conditionGrpElement.appendChild(conditionHelpElement);
@@ -193,10 +194,7 @@ formReady(() => {
 		picturesGrpElement.classList.add("form-group");
 		let picturesLblElement = document.createElement("label");
 		picturesLblElement.setAttribute("for", "pictures" + newItemNum + "[]");
-		picturesLblElement.innerHTML =
-			minPicturesPerItem == 0
-				? "Pictures"
-				: 'Pictures <span class="text-danger" role="none">*</span>';
+		picturesLblElement.innerHTML = minPicturesPerItem == 0 ? "Pictures" : 'Pictures <span class="text-danger" role="none">*</span>';
 		let picturesInputElement = document.createElement("input");
 		picturesInputElement.setAttribute("type", "file");
 		picturesInputElement.setAttribute("accept", "image/png, image/jpeg");
@@ -220,13 +218,13 @@ formReady(() => {
 			// If the number of selected pictures is more than the max allowed
 			if (picturesInputElement.files.length > maxPicturesPerItem) {
 				// Let the user know
-				triggerMsg(picturesHelpElement, "Too many pictures selected.", "warning", msgTimeout);
+				triggerMsg(picturesHelpElement, "Too many pictures selected.", "warning", msgTimeout, true);
 				picturesInputElement.value = ""; // Clear the selection
 			}
 			// If the number of selected pictures is less than the min allowed
 			else if (picturesInputElement.files.length < minPicturesPerItem) {
 				// Let the user know
-				triggerMsg(picturesHelpElement, `Select more pictures.`, "warning", msgTimeout);
+				triggerMsg(picturesHelpElement, `Select more pictures.`, "warning", msgTimeout, true);
 				picturesInputElement.value = ""; // Clear the selection
 			}
 		});
@@ -252,8 +250,7 @@ formReady(() => {
 		videoHelpElement.setAttribute("id", "videoHelpElement" + newItemNum);
 		videoHelpElement.classList.add("form-text");
 		videoHelpElement.classList.add("text-muted");
-		videoHelpElement.innerHTML =
-			"If you have a video of your item(s) on YouTube or elsewhere you can put the URL link here.";
+		videoHelpElement.innerHTML = "If you have a video of your item(s) on YouTube or elsewhere you can put the URL link here.";
 		videoGrpElement.appendChild(videoLblElement);
 		videoGrpElement.appendChild(videoInputElement);
 		videoGrpElement.appendChild(videoHelpElement);
@@ -266,6 +263,26 @@ formReady(() => {
 		// If more than min items
 		if (document.querySelectorAll(".tradeItem").length > minTradeItems) {
 			removeItemBtnElement.disabled = false; // Enabled remove item button
+		}
+	}
+
+	// Function for logging client-side messages during form filling and submission
+	// newMsg <string>: message to log
+	// toConsole <bool>: whether to print it to console or not
+	function logMsg(newMsg, toConsole) {
+		// Build timestamp
+		let cDate = new Date();
+		let timeStamp = `${cDate.getFullYear()}-${cDate.getMonth().toString().padStart(2, "0")}-${cDate.getDate().toString().padStart(2, "0")} ${cDate.toTimeString()}`;
+
+		// Turn existing log into a JSON object
+		let theMsg = { timestamp: timeStamp, msg: newMsg };
+
+		// Add to log
+		msgLog.push(theMsg);
+
+		// If print to console is true
+		if (toConsole === true) {
+			console.log(`[${timeStamp}] ${newMsg}`); // Print the msg to console
 		}
 	}
 
@@ -314,6 +331,12 @@ formReady(() => {
 	// Function for sending trade
 	// Use after calling validateTrade())
 	function sendTrade() {
+		// Log time in minutes it took to fill out the form
+		logMsg(`Time taken to fill out form: ${(Date.now() - startTime) / 1000 / 60} minute(s)`, showDebugInfo);
+
+		// Log sending form
+		logMsg("Sending trade.", showDebugInfo);
+
 		// Add number of trade items
 		tradeFormData.append("numTradeItems", document.querySelectorAll(".tradeItem").length);
 
@@ -334,24 +357,26 @@ formReady(() => {
 			tradeFormData.append(s.name, s.value);
 		});
 
-		// Whether to receive debug info
+		// Whether to receive debug info from server-side
 		if (showDebugInfo === true) {
 			tradeFormData.append("debug", "true");
 		} else {
 			tradeFormData.append("debug", "false");
 		}
 
+		// Add client-side logs to form data
+		tradeFormData.append("csLog", JSON.stringify(msgLog));
+
 		// Setup a new request
 		let request = new XMLHttpRequest();
 
 		// While the trade is sending
 		request.upload.onprogress = (e) => {
-			triggerMsg(
-				submitHelpElement,
-				`Uploading (${((e.loaded / e.total) * 100).toFixed(0)}%)`,
-				"pending",
-				0
-			);
+			// Alert the user of the progress
+			triggerMsg(submitHelpElement, `Uploading (${((e.loaded / e.total) * 100).toFixed(0)}%)`, "pending", 0, false);
+
+			// Log the process
+			logMsg("Uploading trade.", showDebugInfo);
 		};
 
 		// When the trade successfully submits
@@ -373,25 +398,27 @@ formReady(() => {
 				// Show header and body of response
 				submissionResultsElement.innerHTML = responseObj.header + responseObj.body;
 
+				// If form input was invalid
+				if (responseObj.isFormInputValid === false) {
+					// Log the invalid form submission
+					logMsg("Server rejected form as invalid.", showDebugInfo);
+
+					// Let the user retry submitting the form
+					retryForm();
+				} else {
+					// Log successful submission of the form
+					logMsg("Submitted form successfully.", showDebugInfo);
+				}
+
 				// If we are set to show debug info from backend
 				if (showDebugInfo === true) {
 					// Print backend debug info to the console
 					console.log("Server-Side Debug Info:");
 					console.log(responseObj.debugInfo);
 				}
-
-				// If form input was invalid
-				if (responseObj.isFormInputValid === false) {
-					// Let the user retry submitting the form
-					retryForm();
-				}
 			} else {
-				triggerMsg(
-					submitHelpElement,
-					"Failed to send trade. Please check your internet connection and try again.",
-					"warning",
-					msgTimeout
-				);
+				// Alert user
+				triggerMsg(submitHelpElement, "Failed to send trade. Please check your internet connection and try again.", "warning", msgTimeout, true);
 
 				// Let the user retry submitting the form
 				retryForm();
@@ -400,12 +427,7 @@ formReady(() => {
 
 		// Only triggers if the request couldn't be made at all
 		request.onerror = () => {
-			triggerMsg(
-				submitHelpElement,
-				"Failed to send trade. Please check your internet connection and try again.",
-				"warning",
-				msgTimeout
-			);
+			triggerMsg(submitHelpElement, "Failed to send trade. Please check your internet connection and try again.", "warning", msgTimeout, true);
 
 			// Let the user retry submitting the form
 			retryForm();
@@ -416,13 +438,18 @@ formReady(() => {
 		request.send(tradeFormData);
 	}
 
-	// Function for updating input labels
+	// Function for updating input labels; returns true when finished
 	// element <object>: html element
 	// msg <string>: message
 	// type <string>: "normal"(default),"warning", "pending", "success"
-	// timeout <int>: time in milliseconds, 0 means do not remove msg
-	// postAction <function>: post-timeout function to execute
-	function triggerMsg(element, msg, type, timeout, postAction) {
+	// timeout <int>: time in milliseconds before reverting msg, 0 means do not revert msg
+	// logIt <bool>: whether to log the msg
+	async function triggerMsg(element, msg, type, timeout, logIt) {
+		// If logIt is true
+		if (logIt === true) {
+			logMsg(msg, showDebugInfo); // Log the message
+		}
+
 		// Store original msg
 		let originalMsg;
 
@@ -430,6 +457,7 @@ formReady(() => {
 		if (element.innerHTML === undefined) {
 			originalMsg = ""; // Set the original message to be blank
 		} else {
+			// Else the element has content
 			originalMsg = element.innerHTML; // Store the original contents
 		}
 
@@ -454,18 +482,10 @@ formReady(() => {
 		// Set msg
 		element.innerHTML = msg;
 
-		function execPostAction() {
-			// If a postAction was provided
-			if (typeof postAction === "function") {
-				// Else execute postAction function argument
-				postAction();
-			}
-		}
-
 		// If a timeout is not 0
 		if (timeout != 0) {
 			// Wait for requested time
-			setTimeout(() => {
+			await setTimeout(() => {
 				// Style reversion
 				element.classList.add("text-muted");
 				element.classList.remove("text-danger");
@@ -474,26 +494,26 @@ formReady(() => {
 
 				// Revert to original message
 				element.innerHTML = originalMsg;
-
-				// Execute post action
-				execPostAction();
 			}, timeout);
+			return true;
 		} else {
-			// Execute post action
-			execPostAction();
+			return true;
 		}
 	}
 
 	// Function for validating trade
 	// returns (bool)
 	async function validateTrade() {
+		// Log validation started
+		logMsg("Validating form.", showDebugInfo);
+
 		// If the trade items are less than the min allowed
 		if (document.querySelectorAll(".tradeItem").length < minTradeItems) {
-			triggerMsg(submitHelpElement, "Not enough trade items!", "warning", msgTimeout);
+			triggerMsg(submitHelpElement, "Not enough trade items!", "warning", msgTimeout, true);
 			return false; // Return trade is not valid
 		} // Else if the trade items are more than the max allowed
 		else if (document.querySelectorAll(".tradeItem").length > maxTradeItems) {
-			triggerMsg(submitHelpElement, "Too many trade items!", "warning", msgTimeout);
+			triggerMsg(submitHelpElement, "Too many trade items!", "warning", msgTimeout, true);
 			return false; // Return trade is not valid
 		}
 
@@ -521,36 +541,26 @@ formReady(() => {
 					maxSizeMB: maxPictureSizeMB, // Use max size specified above
 					maxWidthOrHeight: maxPictureWidthPX, // Use max width specified above
 					useWebWorker: false, // Use main thread as UI/form input is already disabled
-					onProgress: (p) =>
-						triggerMsg(
-							submitHelpElement,
-							`Compressing ${currentInputFiles[f].name} (${p}%)`,
-							"pending",
-							0
-						),
+					onProgress: (p) => {
+						triggerMsg(submitHelpElement, `Compressing "${currentInputFiles[f].name}" (${p}%)`, "pending", 0, false);
+					},
 				};
 
 				try {
+					// Log compressing current file
+					logMsg(`Compressing "${currentInputFiles[f].name}".`, showDebugInfo);
+
 					// Compress current picture
 					const compressedPictureBlob = await imageCompression(currentInputFiles[f], options);
 
 					// Add compressed blob to form data
-					tradeFormData.append(
-						`compressedPictures${i + 1}[]`,
-						compressedPictureBlob,
-						compressedPictureBlob.name
-					);
+					tradeFormData.append(`compressedPictures${i + 1}[]`, compressedPictureBlob, compressedPictureBlob.name);
 
 					// Add compressed file size to total compressed file size
 					totalSizeOfCompressedPictures += compressedPictureBlob.size;
 				} catch (error) {
 					// Alert user if compression failed for this picture
-					triggerMsg(
-						submitHelpElement,
-						`Failed to compress ${currentInputFiles[f].name}. Please remove it or try again.`,
-						"warning",
-						msgTimeout
-					);
+					triggerMsg(submitHelpElement, `Failed to compress ${currentInputFiles[f].name}. Please remove it or try again.`, "warning", msgTimeout, true);
 
 					// Clear current input file selection
 					fileInputs[i].value = "";
@@ -560,7 +570,8 @@ formReady(() => {
 						tradeFormData.delete(`compressedPictures${d + 1}[]`);
 					}
 
-					console.log(error);
+					// Log error
+					logMsg(error, showDebugInfo);
 
 					// End validation & compression so user can select a different file.
 					return false;
@@ -569,43 +580,12 @@ formReady(() => {
 		}
 
 		// Alert compression done
-		triggerMsg(
-			submitHelpElement,
-			`Compression finished and saved ${(
-				(totalSizeOfSelectedPictures - totalSizeOfCompressedPictures) /
-				1024 /
-				1024
-			).toFixed(2)} MBs. New total file upload size: ${(
-				totalSizeOfCompressedPictures /
-				1024 /
-				1024
-			).toFixed(2)} MBs.`,
-			"success",
-			0
-		);
-		// console.log(
-		// 	`Compression finished and saved ${(
-		// 		(totalSizeOfSelectedPictures - totalSizeOfCompressedPictures) /
-		// 		1024 /
-		// 		1024
-		// 	).toFixed(2)} MBs. New total file upload size: ${(
-		// 		totalSizeOfCompressedPictures /
-		// 		1024 /
-		// 		1024
-		// 	).toFixed(2)} MBs.`
-		// );
+		triggerMsg(submitHelpElement, `Compression finished and saved ${((totalSizeOfSelectedPictures - totalSizeOfCompressedPictures) / 1024 / 1024).toFixed(2)} MBs. New total file upload size: ${(totalSizeOfCompressedPictures / 1024 / 1024).toFixed(2)} MBs.`, "success", 0, true);
 
 		// Make sure the total compressed files' size is less than 25 MBs (max allowable size of email attachments)
 		if ((totalSizeOfCompressedPictures / 1024 / 1024).toFixed(2) > 25) {
 			// Alert user
-			triggerMsg(
-				submitHelpElement,
-				`Total selected picture size of ${(totalSizeOfCompressedPictures / 1024 / 1024).toFixed(
-					2
-				)} MBs is too large. Please remove one and try again.`,
-				"warning",
-				msgTimeout
-			);
+			triggerMsg(submitHelpElement, `Total selected picture size of ${(totalSizeOfCompressedPictures / 1024 / 1024).toFixed(2)} MBs is too large. Please remove one and try again.`, "warning", msgTimeout, true);
 
 			// Delete unused blobs of compressed pictures
 			for (let d = 0; d < fileInputs.length; d++) {
@@ -615,6 +595,8 @@ formReady(() => {
 			// Return trade is invalid
 			return false;
 		}
+		// Log successful form validation
+		logMsg("Validated form successfully.", showDebugInfo);
 
 		// Return trade is valid
 		return true;
@@ -666,7 +648,7 @@ formReady(() => {
 				}
 			})
 			.catch((error) => {
-				console.log(error);
+				logMsg(error, showDebugInfo); // Log msg
 			});
 
 		// Prevent default submission

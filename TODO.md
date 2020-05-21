@@ -1,7 +1,8 @@
 # TO-DO
 
 -  Add backend
--  Add client console log to backend/email
+-  Add unique trade ids
+-  Move form config variables and message templates into a JSON file
 -  Comment style.css
 -  Add git hooks
 -  Test Safari support
