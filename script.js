@@ -14,18 +14,18 @@ formReady(() => {
 	const maxPictureSizeMB = 1; // in MB, maximum file size per picture
 	const maxPictureWidthPX = 1440; // in pixels, maximum picture width
 	const msgTimeout = 4500; // in ms, length of time for form error messages to appears
-	const showDebugInfo = true; // boolean, whether to include variable prints from the server-side and console log client-side
+	const showDebugInfo = true; // boolean, whether to console.log server and client-side logs
+
+	// Trade form variables
 	const startTime = new Date(); // The moment the user started filling out the form
-
-	let tradeFormElement = document.getElementById("tradeForm"); // Create a variable for the trade form
-	let tradeFormData = new FormData(); // Create a FormData object for the trade form
-	let itemsWrapper = document.getElementById("itemsWrapper"); // Create variable for itemWrapper
-	let addItemBtnElement = document.getElementById("addItem"); // Create variable for add item button
-	let removeItemBtnElement = document.getElementById("removeItem"); // Create variable for remove item button
-	let submitBtnElement = document.getElementById("tradeSubmit"); // Create variable for submit button
-	let submitHelpElement = document.getElementById("submitHelp"); // Create a variable for the submit help element
-	let submissionResultsElement = document.getElementById("submissionResults"); // Create a variable for the submission results element
-
+	let tradeFormElement = document.getElementById("tradeForm"); // Variable for the trade form
+	let tradeFormData = new FormData(); // FormData object for the trade form
+	let itemsWrapper = document.getElementById("itemsWrapper"); // Variable for itemWrapper
+	let addItemBtnElement = document.getElementById("addItem"); // Variable for add item button
+	let removeItemBtnElement = document.getElementById("removeItem"); // Variable for remove item button
+	let submitBtnElement = document.getElementById("tradeSubmit"); // Variable for submit button
+	let submitHelpElement = document.getElementById("submitHelp"); // Variable for the submit help element
+	let submissionResultsElement = document.getElementById("submissionResults"); // Variable for the submission results element
 	let msgLog = []; // Array of JSON objects for logging client-side messages during form filling and submission
 
 	// Function for adding a new trade item
@@ -332,7 +332,7 @@ formReady(() => {
 	// Use after calling validateTrade())
 	function sendTrade() {
 		// Log time in minutes it took to fill out the form
-		logMsg(`Time taken to fill out form: ${(Date.now() - startTime) / 1000 / 60} minute(s)`, showDebugInfo);
+		logMsg(`Time taken to fill out form: ${(Date.now() - startTime) / 1000 / 60} minute(s).`, showDebugInfo);
 
 		// Log sending form
 		logMsg("Sending trade.", showDebugInfo);
@@ -614,7 +614,7 @@ formReady(() => {
 		removeItem();
 	});
 
-	// Add submission event listener
+	// When the form is submitted
 	tradeFormElement.addEventListener("submit", (e) => {
 		// Let the user know we are submitting the form
 		submitBtnElement.innerHTML = "Validating...";

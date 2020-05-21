@@ -1,3 +1,4 @@
+/* Background of main wrapper */
 body {
 	background-image: url(https://cdn.shopify.com/s/files/1/1446/2796/t/7/assets/black-ground.jpg?v=2708901460814994401);
 	background-repeat: repeat;
@@ -5,6 +6,7 @@ body {
 	background-color: black;
 }
 
+/* Main content */
 main {
 	background-color: #fff;
 	border-radius: 3px;
@@ -13,11 +15,13 @@ main {
 	margin-bottom: 25px;
 }
 
+/* Logo in main content */
 img.logo {
 	max-width: 300px;
 	padding: 25px 0px 25px 0px;
 }
 
+/* TOS agreement box */
 div.terms {
 	background-color: rgba(0, 60, 255, 0.1);
 	border: blue solid 1px;
@@ -25,26 +29,24 @@ div.terms {
 	padding: 15px;
 }
 
-div.item {
-	border: gray solid 1px;
-	border-radius: 3px;
-	padding: 5px;
-}
-
+/* Invalid input */
 select:invalid,
 input:invalid {
 	box-shadow: 0 0 5px 1px red;
 }
 
+/* While invalid input is being amended */
 select:focus:invalid,
 input:focus:invalid {
 	box-shadow: none;
 }
 
+/* Trade form in main content */
 #tradeForm {
 	display: none; /* Hide the form initially. If Javascript is enabled it will be shown. */
 }
 
+/* Trade item */
 .tradeItem {
 	margin: 3px;
 	padding: 15px 0px 15px 0px;
@@ -52,10 +54,10 @@ input:focus:invalid {
 	border-radius: 3px;
 }
 
+/* Item header */
 .itemHeader {
-	cursor: pointer;
+	cursor: pointer; /* Let the user know they can click on a item header */
 }
-
 .itemHeader::after {
 	color: #6c757d !important;
 	font-size: x-small;
