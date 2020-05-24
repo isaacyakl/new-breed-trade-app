@@ -288,6 +288,8 @@ formReady(() => {
 
 	// Function for enabling the form
 	function retryForm() {
+		document.getElementById("submitSection").style.display = "initial"; // Re-display submit section
+
 		setTimeout(() => {
 			// Re-enable submit button
 			submitBtnElement.innerHTML = "Submit";
@@ -300,7 +302,6 @@ formReady(() => {
 			document.getElementById("personalInfoSection").style.display = "initial";
 			document.getElementById("itemsSection").style.display = "initial";
 			document.getElementById("tradeOptionsSection").style.display = "initial";
-			document.getElementById("submitSection").style.display = "initial";
 
 			// Clear submission results
 			submissionResultsElement.innerHTML = "";
@@ -392,6 +393,17 @@ formReady(() => {
 				// Hide submit section
 				document.getElementById("submitSection").style.display = "none";
 
+				// If show debug info is true or the response is not entirely JSON (probably starts with a PHP error message)
+				if (showDebugInfo === true || request.responseText.charAt(0) !== "{") {
+					console.log(request.responseText); // Log plain text response
+
+					triggerMsg(submitHelpElement, "Failed to send trade because of an internal error. Please try again.", "warning", msgTimeout, true); // Let the user know
+
+					retryForm(); // Let the user retry submitting the form
+
+					return; // End execution
+				}
+
 				// Parse JSON response
 				let responseObj = JSON.parse(request.response);
 
@@ -427,6 +439,7 @@ formReady(() => {
 
 		// Only triggers if the request couldn't be made at all
 		request.onerror = () => {
+			// Alert user
 			triggerMsg(submitHelpElement, "Failed to send trade. Please check your internet connection and try again.", "warning", msgTimeout, true);
 
 			// Let the user retry submitting the form
