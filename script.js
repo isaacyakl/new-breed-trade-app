@@ -14,7 +14,6 @@ formReady(() => {
 	const maxPictureSizeMB = 1; // in MB, maximum file size per picture
 	const maxPictureWidthPX = 1440; // in pixels, maximum picture width
 	const msgTimeout = 4500; // in ms, length of time for form error messages to appears
-	const showDebugInfo = true; // boolean, whether to console.log server and client-side logs
 
 	// Trade form variables
 	const startTime = new Date(); // The moment the user started filling out the form
@@ -27,6 +26,18 @@ formReady(() => {
 	let submitHelpElement = document.getElementById("submitHelp"); // Variable for the submit help element
 	let submissionResultsElement = document.getElementById("submissionResults"); // Variable for the submission results element
 	let msgLog = []; // Array of JSON objects for logging client-side messages during form filling and submission
+
+	// Function for getting a player URL param
+	// Based on: https://blog.bitscry.com/2018/08/17/getting-and-setting-url-parameters-with-javascript/
+	function getURLParam(param) {
+		let parameter = param;
+		parameter = parameter.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+		let regex = new RegExp("[\\?|&]" + parameter + "=([^&#]*)");
+		let results = regex.exec("?" + document.location.toString().split("?")[1]);
+		return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, "%20"));
+	}
+
+	const showDebugInfo = getURLParam("debug") == "true" ? true : false; // boolean, check url for param whether to console.log server and client-side logs
 
 	// Function for adding a new trade item
 	function addItem() {
@@ -374,10 +385,7 @@ formReady(() => {
 		// While the trade is sending
 		request.upload.onprogress = (e) => {
 			// Alert the user of the progress
-			triggerMsg(submitHelpElement, `Uploading (${((e.loaded / e.total) * 100).toFixed(0)}%)`, "pending", 0, false);
-
-			// Log the process
-			logMsg("Uploading trade.", showDebugInfo);
+			triggerMsg(submitHelpElement, `Uploading (${((e.loaded / e.total) * 100).toFixed(0)}%)`, "pending", 0, showDebugInfo);
 		};
 
 		// When the trade successfully submits
@@ -393,9 +401,14 @@ formReady(() => {
 				// Hide submit section
 				document.getElementById("submitSection").style.display = "none";
 
-				// If show debug info is true or the response is not entirely JSON (probably starts with a PHP error message)
-				if (showDebugInfo === true || request.responseText.charAt(0) !== "{") {
-					console.log(request.responseText); // Log plain text response
+				// If the response is not entirely JSON (probably starts with a PHP error message)
+				if (request.responseText.charAt(0) !== "{" && request.responseText.charAt(0) !== "[") {
+					// Show debug info is true
+					if (showDebugInfo === true) {
+						// Print backend debug info to the console
+						console.log("Server-Side Debug Info:");
+						console.log(request.responseText); // Log plain text response
+					}
 
 					triggerMsg(submitHelpElement, "Failed to send trade because of an internal error. Please try again.", "warning", msgTimeout, true); // Let the user know
 
@@ -447,7 +460,7 @@ formReady(() => {
 		};
 
 		// Send trade
-		request.open("POST", "trade.php");
+		request.open("POST", "trade-processor.php");
 		request.send(tradeFormData);
 	}
 

@@ -1,7 +1,6 @@
 # TO-DO
 
 -  Add backend
--  Add unique trade ids
 -  Add git hooks
 -  Add visual feedback green (checkmarks) for valid input
 -  Add Expand All/Collapse All buttons
