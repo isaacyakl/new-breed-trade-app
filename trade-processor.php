@@ -48,10 +48,10 @@ RHS;
         // Add thank you and "Return to Store" button
         $resultBody .= <<<RTSBTN
             <p>
-                Thank you for submitting a trade offer! A copy of it was sent to {$email}. If you would like to add more detail or forgot to add something, please reply to the email receipt you were sent.
+                Thank you for submitting an offer! A copy of it was sent to {$email}. If you would like to add more detail or forgot to add something, simply reply to the email receipt you were sent.
             </p>
             <p>
-                Please allow 48 business hours for us to get back with you. Do not submit multiple trade offers for the same items as this will only slow our response time to offers.
+                Please allow 48 business hours for us to get back with you. Do not submit multiple offers for the same items as this will only slow our response time.
 			</p>
             <p class="text-center">
                 <a href="https://newbreedpb.com" class="btn btn-primary" role="button">Return to Store</a>
@@ -272,7 +272,7 @@ if($_POST['debug']=="true")
 date_default_timezone_set("America/New_York");
 $timeReceived = date("F j, Y, g:i A T",$_SERVER['REQUEST_TIME_FLOAT']);
 
-$tradeProcessorEmail = "isaacdlitzenberger@gmail.com"; // Email to send trades offers to
+$tradeProcessorEmail = "trades@newbreedpb.com"; // Email to send trades offers to
 
 $offerBody = <<<OFBDY
 <table border="0" cellpadding="0" cellspacing="6" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; box-sizing: border-box; padding: 0px;">
@@ -309,10 +309,10 @@ $offerBody = <<<OFBDY
     </tr>
     <tr>
         <td style="font-family: sans-serif; font-size: 14px; vertical-align: top; max-width: 50%; width: 50%; border: 1px solid #ced4da; border-radius: 3px; text-align: left; padding: 6px 12px;">
-            {$email}
+            <a href="mailto:{$email}" title="Email {$fName}">{$email}</a>
         </td>
         <td style="font-family: sans-serif; font-size: 14px; vertical-align: top; max-width: 50%; width: 50%; border: 1px solid #ced4da; border-radius: 3px; text-align: left; padding: 6px 12px;">
-            {$phone}
+          <a href="tel:+1{$phone}" title="Call {$fName}">{$phone}</a>
         </td>
     </tr>
     <tr>
@@ -422,7 +422,26 @@ $offerBody .= <<<OFBDYACCSSRSCNTD
     </tr>
 OFBDYACCSSRSCNTD;
 
-    // $pictures[$i] = $_FILES["compressedPictures{$i}"];
+$offerBody .= <<<OFBDYPICS
+    <tr>
+        <td style="font-family: sans-serif; font-size: 14px; vertical-align: top; text-align: left; padding: 6px 0px; font-weight: bold;" colspan="2">
+            Pictures
+        </td>
+    </tr>
+    <tr>
+        <td style="font-family: sans-serif; font-size: 14px; vertical-align: top; border: 1px solid #ced4da; border-radius: 3px; text-align: left; padding: 6px 12px;" colspan="2">
+OFBDYPICS;
+
+  // Add pictures to HTML
+  for($p=0;$p<count($pictures[$i]['name']);$p++) {
+    $saniFileName = str_replace(" ","-",$pictures[$i]['name'][$p]);
+    $offerBody .= "<img src=\"cid:{$saniFileName}\" alt=\"{$pictures[$i]['name'][$p]}\" style=\"max-width: 100%;\"/><br>";
+  }
+
+$offerBody .= <<<OFBDYPICS2
+        </td>
+    </tr>
+OFBDYPICS2;
 
 $offerBody .= <<<OFBDYVD
     <tr>
@@ -603,8 +622,8 @@ $tradeOffer .= <<<TOHDR
           <div class="content" style="box-sizing: border-box; display: block; Margin: 0 auto; max-width: 580px; padding: 10px;">
 
             <!-- START CENTERED WHITE CONTAINER -->
-            <span class="preheader" style="color: transparent; display: none; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;"><img alt="New Breed Paintball &amp; Airsoft" src="https://cdn.shopify.com/s/files/1/1446/2796/t/7/assets/logo.png?v=16706659427728499645" width="300" height="64" border="0" style="border:0; outline:none; text-decoration:none; display:block; max-width: 300px;
-            padding: 25px 0px 25px 0px;"></span>
+            <span class="preheader" style="color: transparent; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;"><img alt="New Breed Paintball &amp; Airsoft" src="https://cdn.shopify.com/s/files/1/1446/2796/t/7/assets/logo.png?v=16706659427728499645" width="300" height="64" border="0" style="border:0; outline:none; text-decoration:none; display:block; max-width: 300px;
+            padding: 25px 0px 25px 0px; margin: auto;"></span>
             <table class="main" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; background: #ffffff; border-radius: 3px; border-top: #8fca5b 10px solid;">
 TOHDR;
 
@@ -637,7 +656,9 @@ $tradeOffer .= <<<TOFTR
               <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">
                 <tr>
                   <td class="content-block" style="font-family: sans-serif; vertical-align: top; padding-bottom: 10px; padding-top: 10px; font-size: 12px; color: #999999; text-align: center;">
-                    <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">&nbsp;</span>
+                    <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">
+                    New Breed Paintball & Airsoft, 7-05 Fair Lawn Ave, Fair Lawn, NJ 07410</span><br>
+                    Phone: <a href="tel:+12017910377" style="text-decoration: underline; color: #999999; font-size: 12px; text-align: center;">(201) 791-0377</a>
                   </td>
                 </tr>
               </table>
@@ -766,8 +787,8 @@ $tradeReceipt .= <<<TRHDR
           <div class="content" style="box-sizing: border-box; display: block; Margin: 0 auto; max-width: 580px; padding: 10px;">
 
             <!-- START CENTERED WHITE CONTAINER -->
-            <span class="preheader" style="color: transparent; display: none; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;"><img alt="New Breed Paintball &amp; Airsoft" src="https://cdn.shopify.com/s/files/1/1446/2796/t/7/assets/logo.png?v=16706659427728499645" width="300" height="64" border="0" style="border:0; outline:none; text-decoration:none; display:block; max-width: 300px;
-            padding: 25px 0px 25px 0px;"></span>
+            <span class="preheader" style="color: transparent; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;"><img alt="New Breed Paintball &amp; Airsoft" src="https://cdn.shopify.com/s/files/1/1446/2796/t/7/assets/logo.png?v=16706659427728499645" width="300" height="64" border="0" style="border:0; outline:none; text-decoration:none; display:block; max-width: 300px;
+            padding: 25px 0px 25px 0px; margin: auto;"></span>
             <table class="main" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; background: #ffffff; border-radius: 3px; border-top: #8fca5b 10px solid;">
 TRHDR;
 
@@ -782,10 +803,10 @@ $tradeReceipt .= <<<TRMC
                             Hi {$fName},
                         </p>  
                         <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">
-                            Thank you for submitting a trade offer! If you would like to add more detail or forgot to add something, please reply to this email.
+                            Thank you for submitting an offer! If you would like to add more detail or forgot to add something, simply reply to this email.
                         </p>
                         <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">
-                            Please allow 48 business hours for us to get back with you. Do not submit multiple trade offers for the same items as this will only slow our response time to offers.
+                            Please allow 48 business hours for us to get back with you. Do not submit multiple offers for the same items as this will only slow our response time.
                         </p>
                         <hr>
                         <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px; font-weight: bold;">
@@ -832,23 +853,92 @@ $tradeReceipt .= <<<TREND
 </html>
 TREND;
 
-// Headers for trade processor
-$tradeOfferHeaders = "From: noreply@newbreedpb.com" . "\r\n" .
-"Reply-To: {$email}" . "\r\n" .
-"Mime-Version: 1.0" . "\r\n" .
-"Content-type:text/html;charset=UTF-8";
+/* 
+ * Custom PHP function to send an email with multiple attachments from: https://www.codexworld.com/send-email-with-multiple-attachments-php/
+ * $to Recipient email address 
+ * $subject Subject of the email 
+ * $message Mail body content 
+ * $senderEmail Sender email address 
+ * $senderName Sender name 
+ * $files Files to attach with the email 
+ */ 
+function multi_attach_mail($to, $subject, $message, $senderEmail, $senderName, $replyTo, $files = array()){ 
+ 
+  $from = $senderName." <".$senderEmail.">";  
+  $headers = "From: {$from}";
+  $headers .= "\nReply-To: {$replyTo}";
 
-// Headers for trade receipt
-$tradeReceiptHeaders = "From: noreply@newbreedpb.com" . "\r\n" .
-"Reply-To: {$tradeProcessorEmail}" . "\r\n" .
-"Mime-Version: 1.0" . "\r\n" .
-"Content-type:text/html;charset=UTF-8";
+  // Boundary  
+  $semi_rand = md5(time());  
+  $mime_boundary = "==Multipart_Boundary_x{$semi_rand}x";  
+
+  // Headers for attachment  
+  $headers .= "\nMIME-Version: 1.0\n" . "Content-Type: multipart/mixed;\n" . " boundary=\"{$mime_boundary}\"";  
+
+  // Multipart boundary  
+  $message = "--{$mime_boundary}\n" . "Content-Type: text/html; charset=\"UTF-8\"\n" . 
+  "Content-Transfer-Encoding: 7bit\n\n" . $message . "\n\n";  
+
+  // Preparing attachment 
+  if(!empty($files)){ 
+      for($i=0;$i<count($files);$i++){ 
+          if(is_file($files[$i])){ 
+              $file_name = basename($files[$i]); 
+              $file_size = filesize($files[$i]); 
+               
+              $message .= "--{$mime_boundary}\n"; 
+              $fp =    @fopen($files[$i], "rb"); 
+              $data =  @fread($fp, $file_size); 
+              @fclose($fp); 
+              $data = chunk_split(base64_encode($data)); 
+              $message .= "Content-Type: application/octet-stream; name=\"".$file_name."\"\n" .  
+              "Content-Description: ".$file_name."\n" . 
+              "Content-ID: <".$file_name.">\n" . 
+              "Content-Disposition: inline;\n" . " filename=\"".$file_name."\"; size=".$file_size.";\n" .  
+              "Content-Transfer-Encoding: base64\n\n" . $data . "\n\n"; 
+          } 
+      } 
+  } 
+   
+  $message .= "--{$mime_boundary}--";
+  $returnpath = "-f" . $senderEmail; 
+   
+  // Send email 
+  $mail = @mail($to, $subject, $message, $headers, $returnpath);  
+   
+  // Return true, if email sent, otherwise return false 
+  if($mail){ 
+      return true; 
+  }else{ 
+      return false; 
+  } 
+}
+
+// Make directory for storing uploaded pictures based on offer id
+mkdir("./uploads/{$offerId}");
+
+// Build file array for attaching to email
+$files = [];
+for($i=0;$i<count($pictures);$i++) { // Move through items picture sets
+  for($j=0;$j<count($pictures[$i+1]['tmp_name']);$j++) { // Move through each item's pictures
+    $saniFileName = str_replace(" ","-","{$pictures[$i+1]['name'][$j]}"); // Replace spaces with dashes in file name
+    move_uploaded_file($pictures[$i+1]['tmp_name'][$j],"./uploads/{$offerId}/{$saniFileName}");
+    $files[] = "./uploads/{$offerId}/{$saniFileName}"; // Add to attachment array
+  }
+}
 
 // Send trade offer to trade processor
-mail($tradeProcessorEmail, "{$fName} {$lName[0]}. wants to " . ($sellOrTrade === "trade" ? "trade a" : "sell a") . " {$makeModel[1]}", $tradeOffer, $tradeOfferHeaders);
+$sendEmail = multi_attach_mail($tradeProcessorEmail, "{$fName} {$lName[0]}. wants to " . ($sellOrTrade === "trade" ? "trade a" : "sell a") . " {$makeModel[1]}", $tradeOffer, "noreply@newbreedpb.com", "Trade Form", $email, $files);
 
 // Send trade receipt to customer
-mail($email, "Receipt for your " . ($sellOrTrade === "trade" ? "trade" : "sell") . " offer of a {$makeModel[1]}" . ($numOfItems > 1 ? (" and " . ($numOfItems-1) . " item(s)") : ""), $tradeReceipt, $tradeReceiptHeaders);
+$sendEmail = multi_attach_mail($email, "Receipt for your " . ($sellOrTrade === "trade" ? "trade" : "sell") . " offer of a {$makeModel[1]}", $tradeReceipt, "noreply@newbreedpb.com", "New Breed Paintball & Airsoft", $tradeProcessorEmail, $files);
+ 
+// // Email sending status 
+// if($sendEmail){ 
+//     echo 'The email has sent successfully.'; 
+// }else{ 
+//     echo 'Mail sending failed!'; 
+// }
 
 /* ***************************** */
 /*      Display results page     */
