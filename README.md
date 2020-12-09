@@ -4,9 +4,8 @@ This is the code repository for the [trade-in form](https://newbreedpb.com/trade
 # To-Do
 
 -  Replace "Trade-In" with "Trade"
--  Update agreement to include purchases
 -  Change "Offer Id" to "Request Id"
--  "Change verbiage to "Purchase" instead of "Sell" and sell id to start with P's for purchase instead of S's
+-  Change verbiage to "Purchase" instead of "Sell" and sell id to start with P's for purchase instead of S's
 -  Add gun example photos or video demonstration of photo angles
 -  Sanitize uploaded file names on client-side after compression before upload
 -  Add git hooks
