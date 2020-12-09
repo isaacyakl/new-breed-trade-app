@@ -1,5 +1,5 @@
 # New Breed Paintball & Airsoft Trade Form
-This is the code repository for the [trade-in form](https://newbreedpb.com/trade) on [https://newbreedpb.com](https://newbreedpb.com) by [yak](https://isaacyakl.com).
+This is the code repository for the New Breed Paintball & Airsoft [trade form](https://trade.newbreedpb.com) by [yak](https://isaacyakl.com).
 
 # To-Do
 
