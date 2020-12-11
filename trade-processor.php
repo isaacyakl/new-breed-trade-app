@@ -48,10 +48,10 @@ RHS;
         // Add thank you and "Return to Store" button
         $resultBody .= <<<RTSBTN
             <p>
-                Thank you for submitting an offer! A copy of it was sent to {$email}. If you would like to add more detail or forgot to add something, simply reply to the email receipt you were sent.
+                Thank you for submitting a request! A copy of it was sent to {$email}. If you would like to add more detail or forgot to add something, simply reply to the email receipt you were sent.
             </p>
             <p>
-                Please allow 48 business hours for us to get back with you. Do not submit multiple offers for the same items as this will only slow our response time.
+                Please allow 48 business hours for us to get back with you. Do not submit multiple requests for the same items as this will only slow our response time.
 			</p>
             <p class="text-center">
                 <a href="https://newbreedpb.com" class="btn btn-primary" role="button">Return to Store</a>
@@ -233,12 +233,12 @@ if($isFormInputValid === false) {
 }
 
 /* ***************************** */
-/*   Generate unique offer #     */
+/*   Generate unique request #     */
 /* ***************************** */
 
-$offerId = "";
-$offerId .= ($sellOrTrade === "trade" ? "T" : "S"); // Add letter indicating offer type
-$offerId .= strtoupper(bin2hex(random_bytes(6))); // Add unique string identifier
+$requestId = "";
+$requestId .= ($sellOrTrade === "trade" ? "T" : "S"); // Add letter indicating request type
+$requestId .= strtoupper(bin2hex(random_bytes(6))); // Add unique string identifier
 
 /* ***************************** */
 /*          Debug print          */
@@ -263,7 +263,7 @@ if($_POST['debug']=="true")
     $debugInfo .= print_r($tradeTowardsWhat,true);
     $debugInfo .= print_r($commentsNotes,true);
 
-    $debugInfo .= print_r($offerId, true);
+    $debugInfo .= print_r($requestId, true);
 }
 
 /* ***************************** */
@@ -272,9 +272,9 @@ if($_POST['debug']=="true")
 date_default_timezone_set("America/New_York");
 $timeReceived = date("F j, Y, g:i A T",$_SERVER['REQUEST_TIME_FLOAT']);
 
-$tradeProcessorEmail = "trades@newbreedpb.com"; // Email to send trades offers to
+$tradeProcessorEmail = "trades@newbreedpb.com"; // Email to send trades requests to
 
-$offerBody = <<<OFBDY
+$requestBody = <<<RQBDY
 <table border="0" cellpadding="0" cellspacing="6" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; box-sizing: border-box; padding: 0px;">
     <tbody>
     <!-- Personal Info -->
@@ -330,19 +330,19 @@ $offerBody = <<<OFBDY
             </span>
         </td>
     </tr>
-OFBDY;
+RQBDY;
 
-$offerBody .= <<<OFBDYIS
+$requestBody .= <<<RQBDYIS
     <!-- Item(s) -->
     <tr>
         <td style="font-family: sans-serif; font-size: 20px; vertical-align: top; text-align: left; padding-bottom: 6px; font-weight: bold;" colspan="2">
             Item(s)
         </td>
     </tr>
-OFBDYIS;
+RQBDYIS;
 
 for($i = 1 ; $i < $numOfItems+1 ; $i++) {
-$offerBody .= <<<OFBDYINBEG
+$requestBody .= <<<RQBDYINBEG
     <tr>
         <td style="font-family: sans-serif; vertical-align: top; text-align: left;" colspan="2">
 <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; box-sizing: border-box; border: 1px solid #ced4da; border-radius: 3px; padding: 6px;">
@@ -353,8 +353,8 @@ $offerBody .= <<<OFBDYINBEG
             Item {$i}
         </td>
     </tr>
-OFBDYINBEG;
-$offerBody .= <<<OFBDYMM
+RQBDYINBEG;
+$requestBody .= <<<RQBDYMM
     <tr>
         <td style="font-family: sans-serif; font-size: 14px; vertical-align: top; text-align: left; padding: 6px 0px; font-weight: bold;">
             Make, Model, and Color
@@ -365,9 +365,9 @@ $offerBody .= <<<OFBDYMM
             {$makeModel[$i]}
         </td>
     </tr>
-OFBDYMM;
+RQBDYMM;
 
-$offerBody .= <<<OFBDYQTY
+$requestBody .= <<<RQBDYQTY
     <tr>
         <td style="font-family: sans-serif; font-size: 14px; vertical-align: top; text-align: left; padding: 6px 0px; font-weight: bold;">
             Quantity
@@ -378,9 +378,9 @@ $offerBody .= <<<OFBDYQTY
             {$qty[$i]}
         </td>
     </tr>
-OFBDYQTY;
+RQBDYQTY;
 
-$offerBody .= <<<OFBDYCDTN
+$requestBody .= <<<RQBDYCDTN
     <tr>
         <td style="font-family: sans-serif; font-size: 14px; vertical-align: top; text-align: left; padding: 6px 0px; font-weight: bold;">
             Condition
@@ -391,9 +391,9 @@ $offerBody .= <<<OFBDYCDTN
             {$condition[$i]}
         </td>
     </tr>
-OFBDYCDTN;
+RQBDYCDTN;
 
-$offerBody .= <<<OFBDYUPGRDMOD
+$requestBody .= <<<RQBDYUPGRDMOD
     <tr>
         <td style="font-family: sans-serif; font-size: 14px; vertical-align: top; text-align: left; padding: 6px 0px; font-weight: bold;">
             Upgrades / Modifications
@@ -401,13 +401,13 @@ $offerBody .= <<<OFBDYUPGRDMOD
     </tr>
     <tr>
         <td style="font-family: sans-serif; font-size: 14px; vertical-align: top; border: 1px solid #ced4da; border-radius: 3px; text-align: left; padding: 6px 12px;" colspan="2">
-OFBDYUPGRDMOD;
-$offerBody .= ($upgradesMods[$i] != "" ? $upgradesMods[$i] : "&nbsp;");
-$offerBody .= <<<OFBDYUPGRDMODCNTD
+RQBDYUPGRDMOD;
+$requestBody .= ($upgradesMods[$i] != "" ? $upgradesMods[$i] : "&nbsp;");
+$requestBody .= <<<RQBDYUPGRDMODCNTD
         </td>
     </tr>
-OFBDYUPGRDMODCNTD;
-$offerBody .= <<<OFBDYACCSSRS
+RQBDYUPGRDMODCNTD;
+$requestBody .= <<<RQBDYACCSSRS
     <tr>
         <td style="font-family: sans-serif; font-size: 14px; vertical-align: top; text-align: left; padding: 6px 0px; font-weight: bold;" colspan="2">
             Accessories
@@ -415,14 +415,14 @@ $offerBody .= <<<OFBDYACCSSRS
     </tr>
     <tr>
         <td style="font-family: sans-serif; font-size: 14px; vertical-align: top; border: 1px solid #ced4da; border-radius: 3px; text-align: left; padding: 6px 12px;" colspan="2">
-OFBDYACCSSRS;
-$offerBody .= ($accessories[$i] != "" ? $accessories[$i] : "&nbsp;");
-$offerBody .= <<<OFBDYACCSSRSCNTD
+RQBDYACCSSRS;
+$requestBody .= ($accessories[$i] != "" ? $accessories[$i] : "&nbsp;");
+$requestBody .= <<<RQBDYACCSSRSCNTD
         </td>
     </tr>
-OFBDYACCSSRSCNTD;
+RQBDYACCSSRSCNTD;
 
-$offerBody .= <<<OFBDYPICS
+$requestBody .= <<<RQBDYPICS
     <tr>
         <td style="font-family: sans-serif; font-size: 14px; vertical-align: top; text-align: left; padding: 6px 0px; font-weight: bold;" colspan="2">
             Pictures
@@ -430,20 +430,20 @@ $offerBody .= <<<OFBDYPICS
     </tr>
     <tr>
         <td style="font-family: sans-serif; font-size: 14px; vertical-align: top; border: 1px solid #ced4da; border-radius: 3px; text-align: left; padding: 6px 12px;" colspan="2">
-OFBDYPICS;
+RQBDYPICS;
 
   // Add pictures to HTML
   for($p=0;$p<count($pictures[$i]['name']);$p++) {
     $saniFileName = str_replace(" ","-",$pictures[$i]['name'][$p]);
-    $offerBody .= "<img src=\"cid:{$saniFileName}\" alt=\"{$pictures[$i]['name'][$p]}\" style=\"max-width: 100%;\"/><br>";
+    $requestBody .= "<img src=\"cid:{$saniFileName}\" alt=\"{$pictures[$i]['name'][$p]}\" style=\"max-width: 100%;\"/><br>";
   }
 
-$offerBody .= <<<OFBDYPICS2
+$requestBody .= <<<RQBDYPICS2
         </td>
     </tr>
-OFBDYPICS2;
+RQBDYPICS2;
 
-$offerBody .= <<<OFBDYVD
+$requestBody .= <<<RQBDYVD
     <tr>
         <td style="font-family: sans-serif; font-size: 14px; vertical-align: top; text-align: left; padding: 6px 0px; font-weight: bold;" colspan="2">
             Video
@@ -451,21 +451,21 @@ $offerBody .= <<<OFBDYVD
     </tr>
     <tr>
         <td style="font-family: sans-serif; font-size: 14px; vertical-align: top; border: 1px solid #ced4da; border-radius: 3px; text-align: left; padding: 6px 12px;" colspan="2">
-OFBDYVD;
-$offerBody .= ($video[$i] != "" ? "<a href=\"" . $video[$i] . "\" target=\"blank\" title=\"Video of the " . $makeModel[$i] . "\">" . $video[$i] . "</a>" : "&nbsp;");
-$offerBody .= <<<OFBDYVDCNTD
+RQBDYVD;
+$requestBody .= ($video[$i] != "" ? "<a href=\"" . $video[$i] . "\" target=\"blank\" title=\"Video of the " . $makeModel[$i] . "\">" . $video[$i] . "</a>" : "&nbsp;");
+$requestBody .= <<<RQBDYVDCNTD
         </td>
     </tr>
-OFBDYVDCNTD;
-$offerBody .= <<<OFBDYINEND
+RQBDYVDCNTD;
+$requestBody .= <<<RQBDYINEND
         </tbody>
     </table>
     </td>
 </tr>
-OFBDYINEND;
+RQBDYINEND;
 }
 
-$offerBody .= <<<OFBDYTO
+$requestBody .= <<<RQBDYTO
     <!-- Trade Options -->
     <tr>
         <td style="font-family: sans-serif; font-size: 20px; vertical-align: top; text-align: left; padding: 6px 0px; font-weight: bold;" colspan="2">
@@ -479,9 +479,9 @@ $offerBody .= <<<OFBDYTO
     </tr>
     <tr>
         <td style="font-family: sans-serif; font-size: 14px; vertical-align: top; border: 1px solid #ced4da; border-radius: 3px; text-align: left; padding: 6px 12px;" colspan="2">
-OFBDYTO;
-$offerBody .= ($sellOrTrade === "trade" ? "Trading (Receive Store Credit)" : "Selling (Receive Cash) Note: Trading pays much better");
-$offerBody .= <<<OFBDYTOCNTD
+RQBDYTO;
+$requestBody .= ($sellOrTrade === "trade" ? "Trading (Receive Store Credit)" : "Selling (Receive Cash) Note: Trading pays much better");
+$requestBody .= <<<RQBDYTOCNTD
         </td>
     </tr>
     <tr>
@@ -491,9 +491,9 @@ $offerBody .= <<<OFBDYTOCNTD
     </tr>
     <tr>
         <td style="font-family: sans-serif; font-size: 14px; vertical-align: top; border: 1px solid #ced4da; border-radius: 3px; text-align: left; padding: 6px 12px;" colspan="2">
-OFBDYTOCNTD;
-$offerBody .= ($tradeTowardsWhat != "" ? $tradeTowardsWhat : "&nbsp;");
-$offerBody .= <<<OFBDYTOCNTD2
+RQBDYTOCNTD;
+$requestBody .= ($tradeTowardsWhat != "" ? $tradeTowardsWhat : "&nbsp;");
+$requestBody .= <<<RQBDYTOCNTD2
         </td>
     </tr>    
     <tr>
@@ -503,24 +503,24 @@ $offerBody .= <<<OFBDYTOCNTD2
     </tr>
     <tr>
         <td style="font-family: sans-serif; font-size: 14px; vertical-align: top; border: 1px solid #ced4da; border-radius: 3px; text-align: left; padding: 6px 12px;" colspan="2">
-OFBDYTOCNTD2;
-$offerBody .= ($commentsNotes != "" ? $commentsNotes : "&nbsp;");
-$offerBody .= <<<OFBDYTOCNTD3
+RQBDYTOCNTD2;
+$requestBody .= ($commentsNotes != "" ? $commentsNotes : "&nbsp;");
+$requestBody .= <<<RQBDYTOCNTD3
         </td>
     </tr>    
     </tbody>
 </table>
-OFBDYTOCNTD3;
+RQBDYTOCNTD3;
 
-// Trade offer
-$tradeOffer = ""; // The body of the email for the trade processor
-$tradeOffer .= <<<TOHD
+// Trade Request
+$tradeRequest = ""; // The body of the email for the trade processor
+$tradeRequest .= <<<TRHD
 <!doctype html>
 <html>
   <head>
     <meta name="viewport" content="width=device-width">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Offer ID {$offerId}</title>
+    <title>Request ID {$requestId}</title>
     <style>
     /* -------------------------------------
         INLINED WITH htmlemail.io/inline
@@ -611,9 +611,9 @@ $tradeOffer .= <<<TOHD
     }
     </style>
   </head>
-TOHD;
+TRHD;
 
-$tradeOffer .= <<<TOHDR
+$tradeRequest .= <<<TRHDR
   <body class="" style="background-color: #212121; font-family: sans-serif; -webkit-font-smoothing: antialiased; font-size: 14px; line-height: 1.4; margin: 0; padding: 0; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;">
     <table border="0" cellpadding="0" cellspacing="0" class="body" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; background-color: #212121;">
       <tr>
@@ -625,9 +625,9 @@ $tradeOffer .= <<<TOHDR
             <span class="preheader" style="color: transparent; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;"><img alt="New Breed Paintball &amp; Airsoft" src="https://cdn.shopify.com/s/files/1/1446/2796/t/7/assets/logo.png?v=16706659427728499645" width="300" height="64" border="0" style="border:0; outline:none; text-decoration:none; display:block; max-width: 300px;
             padding: 25px 0px 25px 0px; margin: auto;"></span>
             <table class="main" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; background: #ffffff; border-radius: 3px; border-top: #8fca5b 10px solid;">
-TOHDR;
+TRHDR;
 
-$tradeOffer .= <<<TOMC
+$tradeRequest .= <<<TRMC
               <!-- START MAIN CONTENT AREA -->
               <tr>
                 <td class="wrapper" style="font-family: sans-serif; font-size: 14px; vertical-align: top; box-sizing: border-box; padding: 20px;">
@@ -635,10 +635,10 @@ $tradeOffer .= <<<TOMC
                     <tr>
                       <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;">
                         <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px; font-weight: bold;">
-                            Offer ID: {$offerId}<br>
+                            Request ID: {$requestId}<br>
                             <span style="font-family: sans-serif; font-size: 11px; font-weight: normal; margin: 0; Margin-top: 6px;">Received: {$timeReceived}</span>
                         </p>
-                        {$offerBody}
+                        {$requestBody}
                         <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">&nbsp;</p>
                       </td>
                     </tr>
@@ -648,9 +648,9 @@ $tradeOffer .= <<<TOMC
 
             <!-- END MAIN CONTENT AREA -->
             </table>
-TOMC;
+TRMC;
             
-$tradeOffer .= <<<TOFTR
+$tradeRequest .= <<<TRFTR
             <!-- START FOOTER -->
             <div class="footer" style="clear: both; Margin-top: 10px; text-align: center; width: 100%;">
               <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">
@@ -664,9 +664,9 @@ $tradeOffer .= <<<TOFTR
               </table>
             </div>
             <!-- END FOOTER -->
-TOFTR;
+TRFTR;
             
-$tradeOffer .= <<<TOEND
+$tradeRequest .= <<<TREND
             <!-- END CENTERED WHITE CONTAINER -->
             </div>
           </td>
@@ -675,7 +675,7 @@ $tradeOffer .= <<<TOEND
       </table>
     </body>
 </html>
-TOEND;
+TREND;
 
 // Trade receipt
 $tradeReceipt = ""; // The body of the email for the customer
@@ -685,7 +685,7 @@ $tradeReceipt .= <<<TRHD
   <head>
     <meta name="viewport" content="width=device-width">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Receipt for offer {$offerId}</title>
+    <title>Receipt for request {$requestId}</title>
     <style>
     /* -------------------------------------
         INLINED WITH htmlemail.io/inline
@@ -803,17 +803,17 @@ $tradeReceipt .= <<<TRMC
                             Hi {$fName},
                         </p>  
                         <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">
-                            Thank you for submitting an offer! If you would like to add more detail or forgot to add something, simply reply to this email.
+                            Thank you for submitting a request! If you would like to add more detail or forgot to add something, simply reply to this email.
                         </p>
                         <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">
-                            Please allow 48 business hours for us to get back with you. Do not submit multiple offers for the same items as this will only slow our response time.
+                            Please allow 48 business hours for us to get back with you. Do not submit multiple requests for the same items as this will only slow our response time.
                         </p>
                         <hr>
                         <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px; font-weight: bold;">
-                            Offer ID: {$offerId}<br>
+                            Request ID: {$requestId}<br>
                             <span style="font-family: sans-serif; font-size: 11px; font-weight: normal; margin: 0; Margin-top: 6px;">Received: {$timeReceived}</span>
                         </p>
-                        {$offerBody}
+                        {$requestBody}
                         <hr>
                         <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Thanks for doing business with us!</p>
                       </td>
@@ -914,24 +914,24 @@ function multi_attach_mail($to, $subject, $message, $senderEmail, $senderName, $
   } 
 }
 
-// Make directory for storing uploaded pictures based on offer id
-mkdir("./uploads/{$offerId}");
+// Make directory for storing uploaded pictures based on request id
+mkdir("./uploads/{$requestId}");
 
 // Build file array for attaching to email
 $files = [];
 for($i=0;$i<count($pictures);$i++) { // Move through items picture sets
   for($j=0;$j<count($pictures[$i+1]['tmp_name']);$j++) { // Move through each item's pictures
     $saniFileName = str_replace(" ","-","{$pictures[$i+1]['name'][$j]}"); // Replace spaces with dashes in file name
-    move_uploaded_file($pictures[$i+1]['tmp_name'][$j],"./uploads/{$offerId}/{$saniFileName}");
-    $files[] = "./uploads/{$offerId}/{$saniFileName}"; // Add to attachment array
+    move_uploaded_file($pictures[$i+1]['tmp_name'][$j],"./uploads/{$requestId}/{$saniFileName}");
+    $files[] = "./uploads/{$requestId}/{$saniFileName}"; // Add to attachment array
   }
 }
 
-// Send trade offer to trade processor
-$sendEmail = multi_attach_mail($tradeProcessorEmail, "{$fName} {$lName[0]}. wants to " . ($sellOrTrade === "trade" ? "trade a" : "sell a") . " {$makeModel[1]}", $tradeOffer, "noreply@newbreedpb.com", "Trade Form", $email, $files);
+// Send trade request to trade processor
+$sendEmail = multi_attach_mail($tradeProcessorEmail, "{$fName} {$lName[0]}. wants to " . ($sellOrTrade === "trade" ? "trade a" : "sell a") . " {$makeModel[1]}", $tradeRequest, "noreply@newbreedpb.com", "Trade Form", $email, $files);
 
 // Send trade receipt to customer
-$sendEmail = multi_attach_mail($email, "Receipt for your " . ($sellOrTrade === "trade" ? "trade" : "sell") . " offer of a {$makeModel[1]}", $tradeReceipt, "noreply@newbreedpb.com", "New Breed Paintball & Airsoft", $tradeProcessorEmail, $files);
+$sendEmail = multi_attach_mail($email, "Receipt for your " . ($sellOrTrade === "trade" ? "trade" : "sell") . " request of a {$makeModel[1]}", $tradeReceipt, "noreply@newbreedpb.com", "New Breed Paintball & Airsoft", $tradeProcessorEmail, $files);
  
 // // Email sending status 
 // if($sendEmail){ 

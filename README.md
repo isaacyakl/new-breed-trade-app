@@ -3,7 +3,6 @@ This is the code repository for the New Breed Paintball & Airsoft [trade form](h
 
 # To-Do
 
--  Change "Offer Id" to "Request Id"
 -  Change verbiage to "Purchase" instead of "Sell" and sell id to start with P's for purchase instead of S's
 -  Add gun example photos or video demonstration of photo angles
 -  Sanitize uploaded file names on client-side after compression before upload
