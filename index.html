@@ -7,19 +7,17 @@
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
 		<link rel="stylesheet" href="style.css" />
 
-		<title>Trade-In Form - New Breed Paintball & Airsoft</title>
+		<title>Trade Form - New Breed Paintball & Airsoft</title>
 	</head>
 	<body>
-		<img class="logo mx-auto d-block" alt="New Breed Paintball &amp; Airsoft" src="https://cdn.shopify.com/s/files/1/1446/2796/files/new-breed-website-color-logo-lockup_1abca4a0-36e9-44af-8cce-75d532be3ebb.png?v=1599355248" />
+		<img class="logo mx-auto d-block" alt="New Breed Logo" src="https://cdn.shopify.com/s/files/1/1446/2796/files/new-breed-website-color-logo-lockup_1abca4a0-36e9-44af-8cce-75d532be3ebb.png?v=1599355248" />
 		<main class="container">
-			<h1 class="text-center">Trade-in Form</h1>
+			<h1 class="text-center">Trade Form</h1>
 			<!-- No Script -->
 			<noscript>
 				<div class="row">
 					<div class="col">
-						<div class="alert alert-primary text-center" role="alert">
-							Please enable Javascript to use the trade form!
-						</div>
+						<div class="alert alert-primary text-center" role="alert">Please enable Javascript to use the trade form!</div>
 						<p class="text-center">
 							<a href="./" class="btn btn-primary" role="button">Reload Page</a>
 						</p>
@@ -32,12 +30,8 @@
 						<!-- Intro -->
 						<div id="introSection" class="row">
 							<div class="col">
-								<p>
-									Trading in your used equipment is a great way to upgrade without spending a fortune. If we are interested in your offer, you will receive store credit for it. You can then use your credit to buy that shiny, new gun you have been drooling over or even a different used gun!
-								</p>
-								<p class="text-danger text-right">
-									* Required
-								</p>
+								<p>Trading in your used equipment is a great way to upgrade without spending a fortune. If we are interested in your offer, you will receive store credit for it. You can then use your credit to buy that shiny, new gun you have been drooling over or even a different used gun!</p>
+								<p class="text-danger text-right">* Required</p>
 								<hr />
 							</div>
 						</div>
@@ -80,15 +74,15 @@
 								<div class="terms">
 									<div class="form-group">
 										<label>
-											Trade-In Terms Agreement
+											Trade Terms
 											<span class="text-danger" role="none">*</span></label
 										>
-										<small class="form-text text-muted">Before proceeding be sure to read the Trade-In Terms located at <a href="https://newbreedpb.com/pages/trade-in-terms" target="_blank">https://newbreedpb.com/pages/trade-in-terms</a></small>
+										<small class="form-text text-muted">Before proceeding be sure to read the Trade Terms located at <a href="https://newbreedpb.com/pages/trade-terms" target="_blank">https://newbreedpb.com/pages/trade-terms</a></small>
 									</div>
 									<div class="form-group">
 										<div class="form-group form-check">
 											<input type="checkbox" class="form-check-input" id="termsCheck" name="terms" required />
-											<label class="form-check-label" for="termsCheck">I have read and agree to the Trade-In Terms</label>
+											<label class="form-check-label" for="termsCheck">I have read and agree to the Trade Terms</label>
 										</div>
 									</div>
 								</div>
@@ -99,14 +93,10 @@
 						<div id="itemsSection" class="row">
 							<div class="col">
 								<h3>Item(s)</h3>
-								<p>
-									🧾 Enter each item individually (up to 15 unique items) unless you have multiple of the same item. Include details about each item, and, remember, the more information you give us the better.
-								</p>
+								<p>🧾 Enter each item individually (up to 15 unique items) unless you have multiple of the same item. Include details about each item, and, remember, the more information you give us the better.</p>
 								<div class="row">
 									<div class="col">
-										<p>
-											📷 "A picture is worth a thousand words." Before you go any further in the form remember we require photos. So, if you have not yet, go take those photos!
-										</p>
+										<p>📷 "A picture is worth a thousand words." Before you go any further in the form remember we require photos. So, if you have not yet, go take those photos!</p>
 									</div>
 									<div class="col">
 										<p>🔫 Guns/markers must include pictures of the (when applicable):</p>
@@ -124,12 +114,8 @@
 								</div>
 								<p id="itemsWrapper"></p>
 								<p class="text-center">
-									<button type="button" class="btn btn-primary" id="addItem">
-										+ Add Item
-									</button>
-									<button type="button" class="btn btn-danger" id="removeItem" disabled>
-										– Remove Last Item
-									</button>
+									<button type="button" class="btn btn-primary" id="addItem">+ Add Item</button>
+									<button type="button" class="btn btn-danger" id="removeItem" disabled>– Remove Last Item</button>
 								</p>
 								<hr />
 							</div>
@@ -161,13 +147,9 @@
 						<div id="submitSection" class="row">
 							<div class="col">
 								<div class="form-group">
-									<p id="submitHelp" class="form-text text-muted">
-										Now is the time to double check everything. If it all looks good, go ahead and hit that submit button!
-									</p>
+									<p id="submitHelp" class="form-text text-muted">Now is the time to double check everything. If it all looks good, go ahead and hit that submit button!</p>
 									<p class="text-center">
-										<button type="submit" class="btn btn-success" id="tradeSubmit">
-											Submit
-										</button>
+										<button type="submit" class="btn btn-success" id="tradeSubmit">Submit</button>
 									</p>
 								</div>
 							</div>

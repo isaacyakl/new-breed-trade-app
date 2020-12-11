@@ -323,10 +323,10 @@ $offerBody = <<<OFBDY
     <tr>
         <td style="font-family: sans-serif; font-size: 14px; vertical-align: top; background-color: rgba(0, 60, 255, 0.1); border: blue solid 1px; border-radius: 3px; text-align: left; padding: 6px 12px;" colspan="2">
             <span style="font-family: sans-serif; font-size: 14px; display: block; padding: 6px 0px; font-weight: bold;">
-                Trade-In Terms Agreement
+                Trade Terms
             </span>
             <span style="font-family: sans-serif; font-size: 14px; display: block; padding: 6px 0px;">
-                <input type="checkbox" name="terms" checked disabled> I have read and agree to the Trade-In Terms
+                <input type="checkbox" name="terms" checked disabled> I have read and agree to the Trade Terms
             </span>
         </td>
     </tr>
