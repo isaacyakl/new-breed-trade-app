@@ -385,7 +385,7 @@ formReady(() => {
 		// While the trade is sending
 		request.upload.onprogress = (e) => {
 			// Alert the user of the progress
-			triggerMsg(submitHelpElement, `Uploading (${((e.loaded / e.total) * 100).toFixed(0)}%)`, "pending", 0, showDebugInfo);
+			triggerMsg(submitHelpElement, `Uploading (${((e.loaded / e.total) * 100).toFixed(0)}%). This may take a while; please be patient.`, "pending", 0, showDebugInfo);
 		};
 
 		// When the trade successfully submits
