@@ -622,7 +622,7 @@ $tradeRequest .= <<<TRHDR
           <div class="content" style="box-sizing: border-box; display: block; Margin: 0 auto; max-width: 580px; padding: 10px;">
 
             <!-- START CENTERED WHITE CONTAINER -->
-            <span class="preheader" style="color: transparent; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;"><img alt="New Breed Paintball &amp; Airsoft" src="https://cdn.shopify.com/s/files/1/1446/2796/t/7/assets/logo.png?v=16706659427728499645" width="300" height="64" border="0" style="border:0; outline:none; text-decoration:none; display:block; max-width: 300px;
+            <span class="preheader" style="color: transparent; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;"><img alt="New Breed Logo" src="https://cdn.shopify.com/s/files/1/1446/2796/files/new-breed-website-color-logo-lockup_1abca4a0-36e9-44af-8cce-75d532be3ebb.png?v=1599355248" width="300" height="64" border="0" style="border:0; outline:none; text-decoration:none; display:block; max-width: 300px;
             padding: 25px 0px 25px 0px; margin: auto;"></span>
             <table class="main" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; background: #ffffff; border-radius: 3px; border-top: #8fca5b 10px solid;">
 TRHDR;
@@ -787,7 +787,7 @@ $tradeReceipt .= <<<TRHDR
           <div class="content" style="box-sizing: border-box; display: block; Margin: 0 auto; max-width: 580px; padding: 10px;">
 
             <!-- START CENTERED WHITE CONTAINER -->
-            <span class="preheader" style="color: transparent; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;"><img alt="New Breed Paintball &amp; Airsoft" src="https://cdn.shopify.com/s/files/1/1446/2796/t/7/assets/logo.png?v=16706659427728499645" width="300" height="64" border="0" style="border:0; outline:none; text-decoration:none; display:block; max-width: 300px;
+            <span class="preheader" style="color: transparent; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;"><img alt="New Breed Logo" src="https://cdn.shopify.com/s/files/1/1446/2796/files/new-breed-website-color-logo-lockup_1abca4a0-36e9-44af-8cce-75d532be3ebb.png?v=1599355248" width="300" height="64" border="0" style="border:0; outline:none; text-decoration:none; display:block; max-width: 300px;
             padding: 25px 0px 25px 0px; margin: auto;"></span>
             <table class="main" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; background: #ffffff; border-radius: 3px; border-top: #8fca5b 10px solid;">
 TRHDR;
