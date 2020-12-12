@@ -133,7 +133,7 @@ else { // Number of items is within the valid range
 }
 
 // Sanitize trade options
-$sellOrTrade = sanitizeInput($_POST['sellOrTrade']); // dropdown menu (trade/cash) sanitize to be extra safe
+$purchaseOrTrade = sanitizeInput($_POST['purchaseOrTrade']); // dropdown menu (trade/cash) sanitize to be extra safe
 $tradeTowardsWhat = sanitizeInput($_POST['tradeTowardsWhat']);
 $commentsNotes = sanitizeInput($_POST['commentsNotes']);
 
@@ -221,9 +221,9 @@ if($numOfItems !== false) {
     }
 }
 
-// If sell or trade was not selected
-if($sellOrTrade != "sell" && $sellOrTrade != "trade") {
-    addInvalidAlert("Specify whether you want to sell or trade your items!");
+// If purchase or trade was not selected
+if($purchaseOrTrade != "purchase" && $purchaseOrTrade != "trade") {
+    addInvalidAlert("Specify whether you want to purchase or trade your items!");
     $isFormInputValid = false;
 }
 
@@ -237,7 +237,7 @@ if($isFormInputValid === false) {
 /* ***************************** */
 
 $requestId = "";
-$requestId .= ($sellOrTrade === "trade" ? "T" : "S"); // Add letter indicating request type
+$requestId .= ($purchaseOrTrade === "trade" ? "T" : "P"); // Add letter indicating request type
 $requestId .= strtoupper(bin2hex(random_bytes(6))); // Add unique string identifier
 
 /* ***************************** */
@@ -259,7 +259,7 @@ if($_POST['debug']=="true")
     $debugInfo .= print_r($pictures,true);
     $debugInfo .= print_r($video,true);
     
-    $debugInfo .= print_r($sellOrTrade,true);
+    $debugInfo .= print_r($purchaseOrTrade,true);
     $debugInfo .= print_r($tradeTowardsWhat,true);
     $debugInfo .= print_r($commentsNotes,true);
 
@@ -480,7 +480,7 @@ $requestBody .= <<<RQBDYTO
     <tr>
         <td style="font-family: sans-serif; font-size: 14px; vertical-align: top; border: 1px solid #ced4da; border-radius: 3px; text-align: left; padding: 6px 12px;" colspan="2">
 RQBDYTO;
-$requestBody .= ($sellOrTrade === "trade" ? "Trading (Receive Store Credit)" : "Selling (Receive Cash) Note: Trading pays much better");
+$requestBody .= ($purchaseOrTrade === "trade" ? "Trading (Receive Store Credit)" : "Selling (Receive Cash) Note: Trading pays more");
 $requestBody .= <<<RQBDYTOCNTD
         </td>
     </tr>
@@ -928,10 +928,10 @@ for($i=0;$i<count($pictures);$i++) { // Move through items picture sets
 }
 
 // Send trade request to trade processor
-$sendEmail = multi_attach_mail($tradeProcessorEmail, "{$fName} {$lName[0]}. wants to " . ($sellOrTrade === "trade" ? "trade a" : "sell a") . " {$makeModel[1]}", $tradeRequest, "noreply@newbreedpb.com", "Trade Form", $email, $files);
+$sendEmail = multi_attach_mail($tradeProcessorEmail, "{$fName} {$lName[0]}. wants to " . ($purchaseOrTrade === "trade" ? "trade a" : "sell a") . " {$makeModel[1]}", $tradeRequest, "noreply@newbreedpb.com", "Trade Form", $email, $files);
 
 // Send trade receipt to customer
-$sendEmail = multi_attach_mail($email, "Receipt for your " . ($sellOrTrade === "trade" ? "trade" : "sell") . " request of a {$makeModel[1]}", $tradeReceipt, "noreply@newbreedpb.com", "New Breed Paintball & Airsoft", $tradeProcessorEmail, $files);
+$sendEmail = multi_attach_mail($email, "Receipt for your " . ($purchaseOrTrade === "trade" ? "trade" : "purchase") . " request of a {$makeModel[1]}", $tradeReceipt, "noreply@newbreedpb.com", "New Breed Paintball & Airsoft", $tradeProcessorEmail, $files);
  
 // // Email sending status 
 // if($sendEmail){ 
