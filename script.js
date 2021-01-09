@@ -86,7 +86,7 @@ formReady(() => {
 		makeModelGrpElement.classList.add("form-group");
 		let makeModelLblElement = document.createElement("label");
 		makeModelLblElement.setAttribute("for", "makeModel" + newItemNum);
-		makeModelLblElement.innerHTML = 'Make, Model, and Color <span class="text-danger" role="none">*</span>';
+		makeModelLblElement.innerHTML = 'Make, Model, Color, Size, etc. <span class="text-danger" role="none">*</span>';
 		let makeModelInputElement = document.createElement("input");
 		makeModelInputElement.setAttribute("type", "text");
 		makeModelInputElement.classList.add("form-control");
