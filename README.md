@@ -3,6 +3,7 @@ This is the code repository for the New Breed Paintball & Airsoft [trade form](h
 
 # To-Do
 
+-  Update Item Make Model field title in emails sent to customer and NBPA
 -  Add gun example photos or video demonstration of photo angles
 -  Switch to JSON for settings instead of extracting from scripts.js
 -  Sanitize uploaded file names on client-side after compression before upload
