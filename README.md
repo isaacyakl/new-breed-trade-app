@@ -1,5 +1,8 @@
-# New Breed Paintball & Airsoft Trade Form
-This is the code repository for the New Breed Paintball & Airsoft [trade form](https://trade.newbreedpb.com) by [yak](https://isaacyakl.com).
+# New Breed Paintball & Airsoft Trade App
+
+This is the code repository for the [New Breed](https://newbreedpb.com) [trade app](https://newbreedpb.com/trade) by [yak](https://isaacyakl.com). The form is built with Boostrap and jQuery, and it supports adjustable limits for number of trade items and pictures. The server-side uses PHP to create an email thread between the customer and trade processor. Pictures, links, and other trade information are embedded into the email receipts.
+
+[Read more...](https://www.isaacyakl.com/work/newbreedpb)
 
 # To-Do
 
